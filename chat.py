@@ -13,7 +13,7 @@ if sys.platform == 'win32':
 
 api_key = os.getenv("OPENAI_API_KEY")
 if not api_key:
-    raise ValueError("Please set the OPENAI_API_KEY environment variable.")
+    raise ValueError("Please set the OPENAI_API_KEY environment variable.请确认已设置环境变量 OPENAI_API_KEY。")
 base_url = 'https://api.deepseek.com/v1'
 model = "deepseek-chat"
 
