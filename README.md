@@ -10,3 +10,4 @@
 
 ## 下载包
 本程序使用uv包管理器建立虚拟环境运行
+python包目录存于母文件夹下requirement.txt
