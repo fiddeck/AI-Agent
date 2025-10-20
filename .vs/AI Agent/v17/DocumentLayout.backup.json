@@ -1,0 +1,107 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "G:\\Python\u6587\u4EF6\\AI-Agent\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{7ADE8C3A-E1E0-40BD-98D5-1BF92B790A2C}|AI Agent.pyproj|G:\\Python\u6587\u4EF6\\AI-Agent\\command.py||{8B382828-6202-11D1-8870-0000F87579D2}",
+      "RelativeMoniker": "D:0:0:{7ADE8C3A-E1E0-40BD-98D5-1BF92B790A2C}|AI Agent.pyproj|solutionrelative:command.py||{8B382828-6202-11D1-8870-0000F87579D2}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{7ADE8C3A-E1E0-40BD-98D5-1BF92B790A2C}|AI Agent.pyproj|G:\\Python\u6587\u4EF6\\AI-Agent\\server.py||{8B382828-6202-11D1-8870-0000F87579D2}",
+      "RelativeMoniker": "D:0:0:{7ADE8C3A-E1E0-40BD-98D5-1BF92B790A2C}|AI Agent.pyproj|solutionrelative:server.py||{8B382828-6202-11D1-8870-0000F87579D2}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{00000000-0000-0000-0000-000000000000}|\u003CSolution\u003E|AI Agent||{04B8AB82-A572-4FEF-95CE-5222444B6B64}|"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{7ADE8C3A-E1E0-40BD-98D5-1BF92B790A2C}|AI Agent.pyproj|G:\\Python\u6587\u4EF6\\AI-Agent\\chat.py||{8B382828-6202-11D1-8870-0000F87579D2}",
+      "RelativeMoniker": "D:0:0:{7ADE8C3A-E1E0-40BD-98D5-1BF92B790A2C}|AI Agent.pyproj|solutionrelative:chat.py||{8B382828-6202-11D1-8870-0000F87579D2}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 6,
+          "Children": [
+            {
+              "$type": "Bookmark",
+              "Name": "ST:1:0:{3ae79031-e1bc-11d0-8f78-00a0c9110057}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:128:0:{1fc202d4-d401-403c-9834-5b218574bb67}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{3ae79031-e1bc-11d0-8f78-00a0c9110057}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{1c64b9c2-e352-428e-a56d-0ace190b99a6}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{2d7728c2-de0a-45b5-99aa-89b609dfde73}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{40ea2e6b-2121-4bb8-a43e-c83c04b51041}"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "command.py",
+              "DocumentMoniker": "G:\\Python\u6587\u4EF6\\AI-Agent\\command.py",
+              "RelativeDocumentMoniker": "command.py",
+              "ToolTip": "G:\\Python\u6587\u4EF6\\AI-Agent\\command.py",
+              "RelativeToolTip": "command.py",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAcAAAAvAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.002457|",
+              "WhenOpened": "2025-10-19T16:52:47.64Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "AI Agent",
+              "DocumentMoniker": "G:\\Python\u6587\u4EF6\\AI-Agent\\AI Agent.pyproj",
+              "RelativeDocumentMoniker": "AI Agent.pyproj",
+              "ToolTip": "G:\\Python\u6587\u4EF6\\AI-Agent\\AI Agent.pyproj",
+              "RelativeToolTip": "AI Agent.pyproj",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001001|",
+              "WhenOpened": "2025-10-19T16:00:28.785Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "chat.py",
+              "DocumentMoniker": "G:\\Python\u6587\u4EF6\\AI-Agent\\chat.py",
+              "RelativeDocumentMoniker": "chat.py",
+              "ToolTip": "G:\\Python\u6587\u4EF6\\AI-Agent\\chat.py",
+              "RelativeToolTip": "chat.py",
+              "ViewState": "AgIAAF4AAAAAAAAAAAAEwBIAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.002457|",
+              "WhenOpened": "2025-10-19T16:00:18.529Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "server.py",
+              "DocumentMoniker": "G:\\Python\u6587\u4EF6\\AI-Agent\\server.py",
+              "RelativeDocumentMoniker": "server.py",
+              "ToolTip": "G:\\Python\u6587\u4EF6\\AI-Agent\\server.py",
+              "RelativeToolTip": "server.py",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA8AAAAmAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.002457|",
+              "WhenOpened": "2025-10-19T16:00:10.356Z"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
