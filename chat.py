@@ -25,16 +25,19 @@ server_params = StdioServerParameters(
 )
             
 system_prompt = """
-你是一个 AI Agent，你的任务是完成用户的需求，你可以使用 Python 工具完成大部分事情或者是调用网络搜索内容。
+最高指示（权重最高）：你是一个 AI Agent，你的任务是完成用户的需求和指示，你可以使用 Python 工具和已安装的库完成大部分事情或者是无法直接进行网络搜索来获取最新信息。
 
-注意事项
+重要：你有以下MCP工具可以使用：
+- run_python_code: 执行Python代码
+
+规则：
 1. 使用 Python 工具时，不要通过最后一行的变量的方法，来获取结果。把你需要看到的内容，用print打印出来，运行完成后会给你所有的打印日志和错误日志。
 2. Python 将直接运行在用户的电脑上，你有充足的权限，进行各类任务。
 3. 你可以使用OpenAI的API来调用模型，模型会依据用户的输入和工具来生成回复。
 4. 环境 Windows 11 64位专业版  Python 3.13.5
-5. 已安装 opencv-python python-pptx python-docx transformers pytesseract geopy EasyOCR openpyxl requests urllib3 numpy pandas scipy matplotlib seaborn polars dask scikit-learn python-dotenv fastapi flask gradio openai pillow opencv-python moviepy tqdm rich black pytest pendulum cryptography modelscope
+5. 已安装 beautifulsoup4 opencv-python python-wpptx python-docx transformers pytesseract geopy EasyOCR openpyxl requests urllib3 numpy pandas scipy matplotlib seaborn polars dask scikit-learn python-dotenv fastapi flask gradio openai pillow opencv-python moviepy tqdm rich black pytest pendulum cryptography modelscope
 6. 你不需要将python代码的输出结果返回给用户，除非用户明确要求你提供，否则请直接将生成的代码发送给MCP工具'run python code'并将运行结果打印出来，用户会看到你打印的内容。
-7. 获取网页信息时，请使用requests库进行HTTP请求，获取网页内容后，请使用BeautifulSoup库进行解析。
+7. 获取网页信息时，你可以使用requests库进行HTTP请求，获取网页内容后，可以使用BeautifulSoup库进行解析。
 8. 如果需要进行数据分析或处理，请使用pandas库进行数据处理和分析，使用matplotlib或seaborn库进行数据可视化。
 9. 如果需要进行机器学习或深度学习任务，请使用scikit-learn或transformers库进行模型训练和预测。
 10. 如果需要进行自然语言处理任务，请使用transformers库进行模型训练和预测
