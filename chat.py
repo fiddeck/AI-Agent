@@ -9,13 +9,13 @@ import traceback
 
 # 修复 Windows 上的异步事件循环问题
 if sys.platform == 'win32':
-    asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy()) 
+    asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())  # type: ignore
 
 api_key = os.getenv("OPENAI_API_KEY")
 if not api_key:
     raise ValueError("Please set the OPENAI_API_KEY environment variable.请确认已设置环境变量 OPENAI_API_KEY。")
-base_url = 'https://api.deepseek.com/v1'
-model = "deepseek-chat"
+base_url = 'https://api.deepseek.com'
+model = "deepseek-v4-flash"
 
 # Create server parameters for stdio connection
 server_params = StdioServerParameters(

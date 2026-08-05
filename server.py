@@ -10,7 +10,7 @@ def run_python_code(code: str) -> str:
     stdout_io = io.StringIO()
     stderr_io = io.StringIO()
     exec_namespace = {}
-    print(code)
+    #print(code)
     try:
         with contextlib.redirect_stdout(stdout_io), contextlib.redirect_stderr(stderr_io):
             exec(code, exec_namespace)

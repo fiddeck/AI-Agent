@@ -1,6 +1,7 @@
 import subprocess
 import os
 
+#r = route
 venv_python = os.path.abspath(r".venv\Scripts\python.exe")
 script_path = os.path.abspath("chat.py")
 

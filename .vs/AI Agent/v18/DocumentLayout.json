@@ -1,18 +1,25 @@
 {
   "Version": 1,
-  "WorkspaceRootPath": "G:\\Python\u6587\u4EF6\\AI-Agent\\",
+  "WorkspaceRootPath": "F:\\\u8BFE\u9898\\AI-Agent rc-3.0\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{7ADE8C3A-E1E0-40BD-98D5-1BF92B790A2C}|AI Agent.pyproj|G:\\Python\u6587\u4EF6\\AI-Agent\\chat.py||{8B382828-6202-11D1-8870-0000F87579D2}",
-      "RelativeMoniker": "D:0:0:{7ADE8C3A-E1E0-40BD-98D5-1BF92B790A2C}|AI Agent.pyproj|solutionrelative:chat.py||{8B382828-6202-11D1-8870-0000F87579D2}"
+      "AbsoluteMoniker": "D:0:0:{00000000-0000-0000-0000-000000000000}|\u003CSolution\u003E|AI Agent||{04B8AB82-A572-4FEF-95CE-5222444B6B64}|"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{7ADE8C3A-E1E0-40BD-98D5-1BF92B790A2C}|AI Agent.pyproj|G:\\Python\u6587\u4EF6\\AI-Agent\\command.py||{8B382828-6202-11D1-8870-0000F87579D2}",
+      "AbsoluteMoniker": "D:0:0:{7ADE8C3A-E1E0-40BD-98D5-1BF92B790A2C}|AI Agent.pyproj|F:\\\u8BFE\u9898\\AI-Agent rc-3.0\\command.py||{8B382828-6202-11D1-8870-0000F87579D2}",
       "RelativeMoniker": "D:0:0:{7ADE8C3A-E1E0-40BD-98D5-1BF92B790A2C}|AI Agent.pyproj|solutionrelative:command.py||{8B382828-6202-11D1-8870-0000F87579D2}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{7ADE8C3A-E1E0-40BD-98D5-1BF92B790A2C}|AI Agent.pyproj|G:\\Python\u6587\u4EF6\\AI-Agent\\server.py||{8B382828-6202-11D1-8870-0000F87579D2}",
+      "AbsoluteMoniker": "D:0:0:{7ADE8C3A-E1E0-40BD-98D5-1BF92B790A2C}|AI Agent.pyproj|F:\\\u8BFE\u9898\\AI-Agent rc-3.0\\chat.py||{8B382828-6202-11D1-8870-0000F87579D2}",
+      "RelativeMoniker": "D:0:0:{7ADE8C3A-E1E0-40BD-98D5-1BF92B790A2C}|AI Agent.pyproj|solutionrelative:chat.py||{8B382828-6202-11D1-8870-0000F87579D2}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{7ADE8C3A-E1E0-40BD-98D5-1BF92B790A2C}|AI Agent.pyproj|F:\\\u8BFE\u9898\\AI-Agent rc-3.0\\server.py||{8B382828-6202-11D1-8870-0000F87579D2}",
       "RelativeMoniker": "D:0:0:{7ADE8C3A-E1E0-40BD-98D5-1BF92B790A2C}|AI Agent.pyproj|solutionrelative:server.py||{8B382828-6202-11D1-8870-0000F87579D2}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{7ADE8C3A-E1E0-40BD-98D5-1BF92B790A2C}|AI Agent.pyproj|F:\\\u8BFE\u9898\\AI-Agent rc-3.0\\AI Agent.pyproj||{B270807C-D8C6-49EB-8EBE-8E8D566637A1}|888888fd-3c4a-40da-aefb-5ac10f5e8b30",
+      "RelativeMoniker": "D:0:0:{7ADE8C3A-E1E0-40BD-98D5-1BF92B790A2C}|AI Agent.pyproj|solutionrelative:AI Agent.pyproj||{B270807C-D8C6-49EB-8EBE-8E8D566637A1}|888888fd-3c4a-40da-aefb-5ac10f5e8b30"
     }
   ],
   "DocumentGroupContainers": [
@@ -22,7 +29,7 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 7,
+          "SelectedChildIndex": 8,
           "Children": [
             {
               "$type": "Bookmark",
@@ -49,43 +56,58 @@
               "Name": "ST:0:0:{40ea2e6b-2121-4bb8-a43e-c83c04b51041}"
             },
             {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{cce594b6-0c39-4442-ba28-10c64ac7e89f}"
+            },
+            {
               "$type": "Document",
               "DocumentIndex": 1,
               "Title": "command.py",
-              "DocumentMoniker": "G:\\Python\u6587\u4EF6\\AI-Agent\\command.py",
+              "DocumentMoniker": "F:\\\u8BFE\u9898\\AI-Agent rc-3.0\\command.py",
               "RelativeDocumentMoniker": "command.py",
-              "ToolTip": "G:\\Python\u6587\u4EF6\\AI-Agent\\command.py",
+              "ToolTip": "F:\\\u8BFE\u9898\\AI-Agent rc-3.0\\command.py",
               "RelativeToolTip": "command.py",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAcAAAAvAAAAAAAAAA==",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAcAAAAbAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.002457|",
-              "WhenOpened": "2026-05-06T15:41:30.814Z",
+              "WhenOpened": "2026-05-06T15:02:43.635Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
               "DocumentIndex": 0,
-              "Title": "chat.py",
-              "DocumentMoniker": "G:\\Python\u6587\u4EF6\\AI-Agent\\chat.py",
-              "RelativeDocumentMoniker": "chat.py",
-              "ToolTip": "G:\\Python\u6587\u4EF6\\AI-Agent\\chat.py",
-              "RelativeToolTip": "chat.py",
-              "ViewState": "AgIAAF4AAAAAAAAAAAAEwBIAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.002457|",
-              "WhenOpened": "2026-05-06T15:41:30.916Z",
+              "Title": "AI Agent",
+              "DocumentMoniker": "F:\\\u8BFE\u9898\\AI-Agent rc-3.0\\AI Agent.pyproj",
+              "RelativeDocumentMoniker": "AI Agent.pyproj",
+              "ToolTip": "F:\\\u8BFE\u9898\\AI-Agent rc-3.0\\AI Agent.pyproj",
+              "RelativeToolTip": "AI Agent.pyproj",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001001|",
+              "WhenOpened": "2026-05-06T15:02:43.829Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
               "DocumentIndex": 2,
+              "Title": "chat.py",
+              "DocumentMoniker": "F:\\\u8BFE\u9898\\AI-Agent rc-3.0\\chat.py",
+              "RelativeDocumentMoniker": "chat.py",
+              "ToolTip": "F:\\\u8BFE\u9898\\AI-Agent rc-3.0\\chat.py",
+              "RelativeToolTip": "chat.py",
+              "ViewState": "AgIAAF4AAAAAAAAAAAAEwBIAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.002457|",
+              "WhenOpened": "2026-05-06T15:02:43.83Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
               "Title": "server.py",
-              "DocumentMoniker": "G:\\Python\u6587\u4EF6\\AI-Agent\\server.py",
+              "DocumentMoniker": "F:\\\u8BFE\u9898\\AI-Agent rc-3.0\\server.py",
               "RelativeDocumentMoniker": "server.py",
-              "ToolTip": "G:\\Python\u6587\u4EF6\\AI-Agent\\server.py",
+              "ToolTip": "F:\\\u8BFE\u9898\\AI-Agent rc-3.0\\server.py",
               "RelativeToolTip": "server.py",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAA8AAAAmAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.002457|",
-              "WhenOpened": "2026-05-06T15:41:30.918Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-05-06T15:02:43.832Z"
             }
           ]
         }
