@@ -14,4 +14,18 @@ python包目录存于母文件夹下requirement.txt
 
 ## 运行须知
 WindowsSettingBeta2是我制作的全自动环境配置脚本的第二个Beta版本，可能会出现不可描述的问题
+ps:若发现本地无python包体会自动下载python13.5
 请前往https://github.com/fiddeck/AI-Agent/issues 提交你发现的issue
+
+## 目前问题&展望
+> 1 set_event_loop_policy函数嵌套在asyncio上，本意是修复Windows上的异步事件循环问题，但是本函数已经被python14废弃，所以正在学习docker环境来避免这个问题
+
+**python
+if sys.platform == 'win32':
+    asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
+**
+
+> 2 受到上下文字数限制有部分问题
+
+> 3 老问题，docker环境什么时候上？
+我不到哇，而且docker目前有点玩不来，在准备自用workbuddy的docker全自动可视化skill工具
