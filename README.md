@@ -20,10 +20,10 @@ ps:若发现本地无python包体会自动下载python13.5
 ## 目前问题&展望
 > 1 set_event_loop_policy函数嵌套在asyncio上，本意是修复Windows上的异步事件循环问题，但是本函数已经被python14废弃，所以正在学习docker环境来避免这个问题
 
-**python
+```python
 if sys.platform == 'win32':
     asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
-**
+```
 
 > 2 受到上下文字数限制有部分问题
 
