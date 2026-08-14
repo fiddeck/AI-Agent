@@ -1,5 +1,5 @@
 # Python版AI Agent Project
-需要自己在系统环境变量中添加DeepSeek的OpenAI密钥，可以根据自身需求更换模型
+> 需要自己在系统环境变量中添加DeepSeek的OpenAI密钥，可以根据自身需求更换模型
 
 ## 启动方式
 运行前置文件夹内的对应系统的文件来部署本地环境
@@ -9,11 +9,11 @@
 2.双击start.bat来启动command.py（备用和Debug用途）
 
 ## 下载包
-本程序使用uv包管理器建立虚拟环境运行
+> 本程序使用uv包管理器建立虚拟环境运行
 python包目录存于母文件夹下requirement.txt
 
 ## 运行须知
-WindowsSettingBeta2是我制作的全自动环境配置脚本的第二个Beta版本，可能会出现不可描述的问题
+> WindowsSettingBeta2是我制作的全自动环境配置脚本的第二个Beta版本，可能会出现不可描述的问题
 ps:若发现本地无python包体会自动下载python13.5
 请前往https://github.com/fiddeck/AI-Agent/issues 提交你发现的issue
 
@@ -24,6 +24,7 @@ ps:若发现本地无python包体会自动下载python13.5
 if sys.platform == 'win32':
     asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
 ```
+### 目前已经换回Python3.13.15，通过了本地实机测试
 
 > 2 受到上下文字数限制有部分问题
 
