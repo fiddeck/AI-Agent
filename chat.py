@@ -9,7 +9,7 @@ import traceback
 
 # 修复 Windows 上的异步事件循环问题
 if sys.platform == 'win32':
-    asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())  # type: ignore
+    asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy()) 
 
 api_key = os.getenv("OPENAI_API_KEY")
 if not api_key:
