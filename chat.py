@@ -9,7 +9,7 @@ import traceback
 
 # 修复 Windows 上的异步事件循环问题
 if sys.platform == 'win32':
-    asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy()) 
+    asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
 
 api_key = os.getenv("OPENAI_API_KEY")
 if not api_key:
@@ -46,7 +46,7 @@ system_prompt = """
 12. 如果需要进行音频处理任务，请使用moviepy库进行音频处理和分析。
 13. 如果需要进行视频处理任务，请使用moviepy库进行视频处理和分析。
 14. 如果需要进行文件操作，请使用Python内置的os和shutil库进行文件操作。
-15. 在获取网页信息时，请注意文件的来源，最好从官方渠道（优先选择国家机构发布的内容）获取，避免使用不可靠的来源。
+15. 在获取网页信息时，请注意文件的来源，优先从官方渠道（优先选择国家机构发布的内容）获取，避免使用不可靠的来源。
 16. 需要获取地理位置信息时，请使用requests库进行HTTP请求，获取地理位置信息。
 17. 若缺少库来表达信息，请使用文字描述即可
 18. 描述信息时提取要点，包含主要的内容
