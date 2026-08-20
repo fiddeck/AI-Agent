@@ -1,0 +1,9 @@
+{
+  "model": "deepseek-v4-flash",
+  "base_url": "https://api.deepseek.com",
+  "api_key": "sk-ceae4c5b3b344811b6e1435b41eccbf9",
+  "port": 8000,
+  "font_size": 14,
+  "accent": "#4d9fff",
+  "background": "#ffffff"
+}
