@@ -68,6 +68,7 @@ webui.bat
 ```powershell
 start.bat    # 等价于 .venv\Scripts\python chat.py
 ```
+目前已经换回Python3.13.15，通过了本地实机测试
 
 ## 构建桌面版 (AI-Agent-GUI)
 
