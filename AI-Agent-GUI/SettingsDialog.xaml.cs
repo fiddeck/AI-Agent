@@ -17,7 +17,8 @@ public sealed partial class SettingsDialog : ContentDialog
         _orig = settings;
         Title = firstRun ? "首次使用 - 配置 API Key" : "⚙ 设置";
 
-        foreach (var m in new[] { "deepseek-v4-flash", "deepseek-chat", "deepseek-reasoner",
+        // DeepSeek 官方最新 V4 系列: v4-flash (高速省 token) / v4-pro (更强推理)
+        foreach (var m in new[] { "deepseek-v4-flash", "deepseek-v4-pro",
                                   "gpt-4o", "gpt-4o-mini", "claude-sonnet-4" })
             ModelBox.Items.Add(m);
         ModelBox.Text = settings.Model;
@@ -63,8 +64,8 @@ public sealed partial class SettingsDialog : ContentDialog
             BaseUrl = baseUrl,
             // 输入框留空时保留原密钥 (避免误清空)
             ApiKey = key.Length > 0 ? key : _orig.ApiKey,
-            Port = (int)(PortBox.Value ?? 8000),
-            FontSize = FontBox.Value ?? 14,
+            Port = PortBox.Value >= 1024 ? (int)PortBox.Value : 8000,
+            FontSize = FontBox.Value >= 10 ? FontBox.Value : 14,
             Accent = accent,
             Background = background,
         };

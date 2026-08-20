@@ -295,3 +295,7 @@ G:\Python文件\AI-Agent - rc1\AI-Agent-GUI\obj\x64\Release\net8.0-windows10.0.1
 G:\Python文件\AI-Agent - rc1\AI-Agent-GUI\obj\x64\Release\net8.0-windows10.0.19041.0\qualifiers.txt
 G:\Python文件\AI-Agent - rc1\AI-Agent-GUI\obj\x64\Release\net8.0-windows10.0.19041.0\qualifiers.txt.intermediate
 G:\Python文件\AI-Agent - rc1\AI-Agent-GUI\obj\x64\Release\net8.0-windows10.0.19041.0\MultipleQualifiersPerDimensionFound.txt
+G:\Python文件\AI-Agent - rc1\AI-Agent-GUI\obj\x64\Release\net8.0-windows10.0.19041.0\SettingsDialog.g.i.cs
+G:\Python文件\AI-Agent - rc1\AI-Agent-GUI\obj\x64\Release\net8.0-windows10.0.19041.0\SettingsDialog.g.cs
+G:\Python文件\AI-Agent - rc1\AI-Agent-GUI\obj\x64\Release\net8.0-windows10.0.19041.0\SettingsDialog.xaml
+G:\Python文件\AI-Agent - rc1\AI-Agent-GUI\obj\x64\Release\net8.0-windows10.0.19041.0\SettingsDialog.xbf

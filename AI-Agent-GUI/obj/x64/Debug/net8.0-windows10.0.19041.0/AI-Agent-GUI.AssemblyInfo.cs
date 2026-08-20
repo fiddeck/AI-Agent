@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("AI-Agent-GUI")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+b954d63a97319d5ee67b29db134b34e5494d2bd8")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+9d059f43e3f12e47edd90b2013de9192b9f9da91")]
 [assembly: System.Reflection.AssemblyProductAttribute("AI-Agent-GUI")]
 [assembly: System.Reflection.AssemblyTitleAttribute("AI-Agent-GUI")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

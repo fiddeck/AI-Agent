@@ -13,6 +13,9 @@ using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
 using Windows.System;
 using Microsoft.UI.Text;
+using Windows.Foundation;
+using Windows.Graphics;
+using Windows.UI;
 using DispatcherQueue = Microsoft.UI.Dispatching.DispatcherQueue;
 
 namespace AIAgentGUI;
@@ -54,6 +57,7 @@ public sealed partial class MainWindow : Window
             AppWindow.Resize(new Windows.Graphics.SizeInt32(1100, 720));
         }
         catch { /* 部分环境不支持, 忽略 */ }
+        SetupTitleBar();
         Closed += (_, _) =>
         {
             try
@@ -64,6 +68,51 @@ public sealed partial class MainWindow : Window
             catch { /* 忽略清理异常 */ }
         };
         _ = InitAsync();
+    }
+
+    // ==================== 自定义标题栏 ====================
+
+    /// <summary>内容延伸到标题栏, 系统按钮透明化, 顶栏可拖拽。</summary>
+    private void SetupTitleBar()
+    {
+        try
+        {
+            var tb = AppWindow.TitleBar;
+            tb.ExtendsContentIntoTitleBar = true;
+            tb.ButtonBackgroundColor = Color.FromArgb(0, 0, 0, 0);
+            tb.ButtonInactiveBackgroundColor = Color.FromArgb(0, 0, 0, 0);
+            tb.ButtonHoverBackgroundColor = Color.FromArgb(26, 255, 255, 255);
+            tb.ButtonPressedBackgroundColor = Color.FromArgb(45, 255, 255, 255);
+            tb.ButtonForegroundColor = Color.FromArgb(255, 255, 255, 255);
+            tb.ButtonInactiveForegroundColor = Color.FromArgb(150, 255, 255, 255);
+            RootGrid.SizeChanged += (_, _) => UpdateDragRect();
+            UpdateDragRect();
+        }
+        catch { /* 个别环境不支持, 回退默认标题栏 */ }
+    }
+
+    /// <summary>顶栏设为拖拽区: 到设置按钮左侧为止, 右侧留给设置按钮和系统按钮。</summary>
+    private void UpdateDragRect()
+    {
+        try
+        {
+            int w = (int)Math.Max(RootGrid.ActualWidth, 0);
+            int h = (int)Math.Max(HeaderPanel.ActualHeight, 0);
+            if (w <= 0 || h <= 0) return;
+
+            int dragW = w - 150;   // 系统按钮区 (右上角)
+            try
+            {
+                var pt = SettingsBtn.TransformToVisual(HeaderPanel).TransformPoint(new Point(0, 0));
+                dragW = Math.Min(dragW, (int)pt.X - 4);   // 设置按钮左侧为止
+            }
+            catch { /* 布局未就绪时用保守值 */ }
+            if (dragW < 100) dragW = 100;
+
+            AppWindow.TitleBar.SetDragRectangles(
+                new[] { new RectInt32(0, 0, dragW, h) });
+        }
+        catch { /* 忽略 */ }
     }
 
     // ==================== 初始化 ====================
@@ -369,16 +418,19 @@ public sealed partial class MainWindow : Window
             Text = text,
             TextWrapping = TextWrapping.Wrap,
             FontSize = _fontSize,
+            LineHeight = _fontSize + 6,
             Foreground = UiColors.Brush(UiColors.Text),
             IsTextSelectionEnabled = true,
         };
         var border = new Border
         {
             Background = UiColors.Brush(UiColors.UserBubble),
-            CornerRadius = new CornerRadius(12, 4, 12, 12),
-            Padding = new Thickness(12, 9, 12, 9),
+            BorderBrush = UiColors.Brush(UiColors.Border),
+            BorderThickness = new Thickness(1),
+            CornerRadius = new CornerRadius(14, 14, 4, 14),
+            Padding = new Thickness(14, 10, 14, 10),
             HorizontalAlignment = HorizontalAlignment.Right,
-            MaxWidth = 560,
+            MaxWidth = 640,
             Child = tb,
         };
         MessagePanel.Children.Add(border);
@@ -387,23 +439,75 @@ public sealed partial class MainWindow : Window
 
     private void BeginAssistantMessage()
     {
+        // 头像 + 内容列
+        var avatar = new Border
+        {
+            Width = 34,
+            Height = 34,
+            CornerRadius = new CornerRadius(17),
+            Background = UiColors.AccentGradient,
+            VerticalAlignment = VerticalAlignment.Top,
+            Child = new TextBlock
+            {
+                Text = "🤖",
+                FontSize = 15,
+                HorizontalAlignment = HorizontalAlignment.Center,
+                VerticalAlignment = VerticalAlignment.Center,
+            },
+        };
+
         var content = new StackPanel { Spacing = 6 };
         var tools = new StackPanel { Spacing = 6 };
-        var panel = new StackPanel { Spacing = 8 };
-        panel.Children.Add(content);
-        panel.Children.Add(tools);
+        var body = new StackPanel { Spacing = 8 };
+        body.Children.Add(content);
+        body.Children.Add(tools);
 
-        var border = new Border
+        var card = new Border
         {
             Background = UiColors.Brush(UiColors.Panel2),
             BorderBrush = UiColors.Brush(UiColors.Border),
             BorderThickness = new Thickness(1),
-            CornerRadius = new CornerRadius(4, 12, 12, 12),
-            Padding = new Thickness(12, 10, 12, 10),
-            HorizontalAlignment = HorizontalAlignment.Stretch,
-            Child = panel,
+            CornerRadius = new CornerRadius(4, 14, 14, 14),
+            Padding = new Thickness(14, 10, 14, 10),
+            Child = body,
         };
-        MessagePanel.Children.Add(border);
+
+        var nameRow = new StackPanel
+        {
+            Orientation = Orientation.Horizontal,
+            Spacing = 8,
+            Margin = new Thickness(0, 0, 0, 4),
+        };
+        nameRow.Children.Add(new TextBlock
+        {
+            Text = "AI Agent",
+            FontSize = 11.5,
+            FontWeight = FontWeights.SemiBold,
+            Foreground = UiColors.Brush(UiColors.Muted),
+        });
+        nameRow.Children.Add(new TextBlock
+        {
+            Text = "刚刚",
+            FontSize = 10.5,
+            Foreground = UiColors.Brush(UiColors.Muted),
+            Opacity = 0.7,
+        });
+
+        var col = new StackPanel { Spacing = 0 };
+        col.Children.Add(nameRow);
+        col.Children.Add(card);
+
+        var row = new StackPanel
+        {
+            Orientation = Orientation.Horizontal,
+            Spacing = 10,
+            HorizontalAlignment = HorizontalAlignment.Stretch,
+            MaxWidth = 780,
+        };
+        row.Children.Add(avatar);
+        row.Children.Add(col);
+
+        MessagePanel.Children.Add(row);
         _assistantContent = content;
         _assistantTools = tools;
     }
@@ -453,11 +557,13 @@ public sealed partial class MainWindow : Window
 
         if (streaming)
         {
-            _assistantContent.Children.Add(new TextBlock
+            _assistantContent.Children.Add(new ProgressRing
             {
-                Text = "▍",
-                FontSize = _fontSize,
+                Width = 13,
+                Height = 13,
+                IsActive = true,
                 Foreground = UiColors.Brush(UiColors.Accent),
+                Margin = new Thickness(4, 7, 0, 0),
             });
         }
     }
@@ -477,13 +583,30 @@ public sealed partial class MainWindow : Window
     {
         if (_assistantTools == null) return;
 
+        var icon = new Border
+        {
+            Width = 24,
+            Height = 24,
+            CornerRadius = new CornerRadius(6),
+            Background = UiColors.Brush(UiColors.BadgeBg),
+            VerticalAlignment = VerticalAlignment.Center,
+            Child = new TextBlock
+            {
+                Text = "🔧",
+                FontSize = 12,
+                HorizontalAlignment = HorizontalAlignment.Center,
+                VerticalAlignment = VerticalAlignment.Center,
+            },
+        };
         var header = new StackPanel { Orientation = Orientation.Horizontal, Spacing = 8 };
+        header.Children.Add(icon);
         header.Children.Add(new TextBlock
         {
-            Text = "🔧 " + name,
+            Text = name,
             FontSize = 12.5,
             FontWeight = FontWeights.SemiBold,
             Foreground = UiColors.Brush(UiColors.Accent),
+            VerticalAlignment = VerticalAlignment.Center,
         });
         var argsShort = args.Replace("\n", " ");
         if (argsShort.Length > 60) argsShort = argsShort.Substring(0, 60) + "…";
@@ -494,6 +617,7 @@ public sealed partial class MainWindow : Window
             Foreground = UiColors.Brush(UiColors.Muted),
             TextTrimming = TextTrimming.CharacterEllipsis,
             MaxWidth = 420,
+            VerticalAlignment = VerticalAlignment.Center,
         });
 
         var body = new StackPanel { Spacing = 6 };
@@ -524,6 +648,10 @@ public sealed partial class MainWindow : Window
             Background = UiColors.Brush(UiColors.Panel2),
             BorderBrush = UiColors.Brush(UiColors.Border),
             BorderThickness = new Thickness(1),
+            CornerRadius = new CornerRadius(10),
+            HorizontalAlignment = HorizontalAlignment.Stretch,
+            MaxWidth = 560,
+            HorizontalContentAlignment = HorizontalAlignment.Stretch,
         });
         ScrollToBottom();
     }
@@ -697,37 +825,43 @@ public sealed partial class MainWindow : Window
         SidebarFooter.Text = $"模型: {_settings.Model}\n工具: 15 个系统级 MCP";
     }
 
-    /// <summary>按当前配色给静态 XAML 元素换肤 (消息气泡等动态元素直接用 UiColors)。</summary>
+    /// <summary>按当前配色给界面换肤: 侧栏/顶栏/输入坞固定深色外壳, 消息区与强调色跟随主题。</summary>
     private void ApplyTheme()
     {
         try
         {
             RootGrid.RequestedTheme = UiColors.IsDarkTheme ? ElementTheme.Dark : ElementTheme.Light;
             RootGrid.Background = UiColors.Brush(UiColors.Background);
-            SidebarPanel.Background = UiColors.Brush(UiColors.Panel);
-            SidebarPanel.BorderBrush = UiColors.Brush(UiColors.Border);
-            HeaderPanel.Background = UiColors.Brush(UiColors.Panel);
-            HeaderPanel.BorderBrush = UiColors.Brush(UiColors.Border);
-            InputPanel.Background = UiColors.Brush(UiColors.Panel);
-            InputPanel.BorderBrush = UiColors.Brush(UiColors.Border);
-            NewChatBtn.Background = UiColors.Brush(UiColors.Panel2);
-            NewChatBtn.BorderBrush = UiColors.Brush(UiColors.Border);
-            NewChatBtn.Foreground = UiColors.Brush(UiColors.Text);
-            SettingsBtn.Background = UiColors.Brush(UiColors.Panel2);
-            SettingsBtn.BorderBrush = UiColors.Brush(UiColors.Border);
-            SettingsBtn.Foreground = UiColors.Brush(UiColors.Muted);
-            SendBtn.Background = UiColors.Brush(UiColors.AccentDark);
+            NewChatBtn.Background = UiColors.AccentGradient;
+            SendBtn.Background = UiColors.AccentGradient;
             ModelBadgeBorder.Background = UiColors.Brush(UiColors.BadgeBg);
+            ModelBadge.Foreground = UiColors.Brush(UiColors.Accent);
             StatusText.Foreground = UiColors.Brush(UiColors.Muted);
+            FooterStatus.Foreground = UiColors.Brush(UiColors.Muted);
             SidebarFooter.Foreground = UiColors.Brush(UiColors.Muted);
-            InputBox.Background = UiColors.Brush(UiColors.Panel2);
-            InputBox.BorderBrush = UiColors.Brush(UiColors.Border);
+            InputShell.Background = UiColors.Brush(UiColors.Panel2);
+            InputShell.BorderBrush = UiColors.Brush(UiColors.Border);
             InputBox.Foreground = UiColors.Brush(UiColors.Text);
         }
         catch
         {
             // 个别控件不可用时忽略, 不影响主流程
         }
+    }
+
+    private void InputBox_TextChanged(object sender, TextChangedEventArgs e)
+    {
+        SendBtn.IsEnabled = !string.IsNullOrWhiteSpace(InputBox.Text);
+    }
+
+    private void InputBox_GotFocus(object sender, RoutedEventArgs e)
+    {
+        try { InputShell.BorderBrush = UiColors.Brush(UiColors.Accent); } catch { }
+    }
+
+    private void InputBox_LostFocus(object sender, RoutedEventArgs e)
+    {
+        try { InputShell.BorderBrush = UiColors.Brush(UiColors.Border); } catch { }
     }
 
     private void SendMessage()

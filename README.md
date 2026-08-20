@@ -58,26 +58,46 @@ webui.bat
 
 ### 方式 2：WinUI 3 桌面版（原生窗口，最接近本地应用体验）
 
-见下方"构建桌面版"。构建后直接运行 `AI-Agent-GUI.exe`：
+见下方"构建桌面版"。构建/发布后**直接双击项目根目录的 `AI-Agent 桌面版.lnk`**（或
+`dist\AI-Agent-GUI\AI-Agent-GUI.exe`）即可：
 - 自动查找项目根目录并隐藏启动后端，无需手动开服务；
 - 首次使用（无密钥）自动弹出配置对话框；
 - 顶栏 ⚙ 设置与网页版共享同一份 `settings.json`。
+
+> ⚠️ 不要单独把 `AI-Agent-GUI.exe` 拷出来双击：.NET/WinUI 程序的 exe 只是引导器，
+> 必须和同目录下的 `AI-Agent-GUI.dll`、`AI-Agent-GUI.pri`、`*.xbf` 及整套运行库放在
+> 一起才能启动（在 VS 里能跑是因为 VS 是从 bin 完整目录启动的）。
 
 ### 方式 3：命令行（调试用）
 
 ```powershell
 start.bat    # 等价于 .venv\Scripts\python chat.py
 ```
+
+也可直接双击根目录的 `AI-Agent.exe`（C++ 启动器，自动定位项目根目录并新开控制台运行
+`chat.py`，不依赖当前工作目录，从资源管理器双击即可）。
 目前已经换回Python3.13.15，通过了本地实机测试
 
 ## 构建桌面版 (AI-Agent-GUI)
 
 1. 安装 **Visual Studio 2022**（17.8+），工作负载勾选 **".NET 桌面开发"**，组件勾选 **"Windows 应用 SDK (WinUI)"**；
 2. 打开 `AI-Agent-GUI\AI-Agent-GUI.csproj`，平台选 **x64**，等待 NuGet 还原；
-3. 生成解决方案；
-4. 产物在 `AI-Agent-GUI\bin\x64\Debug\net8.0-windows10.0.19041.0\win-x64\AI-Agent-GUI.exe`，直接运行。
+3. 生成解决方案（VS 内直接 F5 调试）；
+4. 产物在 `AI-Agent-GUI\bin\x64\Release\net8.0-windows10.0.19041.0\AI-Agent-GUI.exe`，直接运行。
 
-> 也可命令行构建：`dotnet build AI-Agent-GUI\AI-Agent-GUI.csproj -c Release -r win-x64`
+**发布独立版（推荐，双击即用，自带 .NET 运行时）：**
+
+```bat
+:: 注意: 必须用 VS 自带的 MSBuild (dotnet CLI 缺少 WinUI 的 PRI 打包任务)
+"F:\Visual Studio 2026\MSBuild\Current\Bin\amd64\MSBuild.exe" ^
+  AI-Agent-GUI\AI-Agent-GUI.csproj /t:Publish ^
+  /p:Configuration=Release /p:Platform=x64 /p:RuntimeIdentifier=win-x64 ^
+  /p:SelfContained=true /p:PublishDir=G:\Python文件\AI-Agent - rc1\dist\AI-Agent-GUI
+```
+
+> ⚠️ 发布完成后需把 `AI-Agent-GUI\bin\x64\Release\net8.0-windows10.0.19041.0\win-x64\`
+> 里本应用的 `AI-Agent-GUI.pri` 与 `App.xbf`/`MainWindow.xbf`/`SettingsDialog.xbf`
+> 一并复制进 `dist\AI-Agent-GUI\`（WinUI 发布会漏掉这几个文件，缺失会导致双击闪退）。
 
 ## 自定义设置
 
@@ -91,7 +111,7 @@ start.bat    # 等价于 .venv\Scripts\python chat.py
 | `port` | `8000` | 后端端口（被占用时自动顺延） |
 | `font_size` | `14` | 消息字号（仅桌面版） |
 | `accent` | `#4D9FFF` | 主题色 |
-| `background` | `#FFFFFF` | 背景色（默认白色；背景偏亮自动切换浅色主题，偏暗切换深色主题） |
+| `background` | `#0C1117` | 背景色（默认深色；背景偏亮自动切换浅色主题，偏暗切换深色主题） |
 
 环境变量优先级高于设置文件：`OPENAI_API_KEY` / `OPENAI_MODEL` / `OPENAI_BASE_URL` / `WEBUI_PORT`。
 
@@ -109,6 +129,7 @@ start.bat    # 等价于 .venv\Scripts\python chat.py
 | 端口被占用报 `winerror 10013` | 正常现象：Windows 保留端口段（Hyper-V/WSL）。系统会自动顺延端口，无需处理 |
 | 网页版启动报错乱码 | 批处理必须保持纯 ASCII（不要往 `webui.bat` 里加中文） |
 | 找不到后端根目录 | 桌面版通过环境变量 `AI_AGENT_ROOT` 可指定项目根目录 |
+| 双击 `AI-Agent-GUI.exe` 打不开/闪退 | 只把 exe 单独拷走了。请双击根目录 `AI-Agent 桌面版.lnk` 或 `dist\AI-Agent-GUI\AI-Agent-GUI.exe`，整个文件夹要一起保留 |
 | 想停止后端 | 网页版：关掉 `webui.bat` 窗口；桌面版：关闭主窗口会自动结束它拉起的后端 |
 
 ## 目录结构

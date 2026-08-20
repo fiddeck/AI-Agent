@@ -66,11 +66,13 @@ model = os.getenv("OPENAI_MODEL") or str(_cfg.get("model") or _DEFAULTS["model"]
 PORT = int(os.getenv("WEBUI_PORT") or _cfg.get("port") or 8000)
 configured = bool(api_key)   # 未配置密钥时后端不崩溃, 页面提示引导配置
 
-# 与 chat.py 保持一致的 MCP 服务参数
+# 与 chat.py 保持一致: 用当前解释器 + server.py 绝对路径, 不依赖工作目录
+_SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 server_params = StdioServerParameters(
     command=sys.executable,
-    args=["server.py"],
+    args=[os.path.join(_SCRIPT_DIR, "server.py")],
     env=None,
+    cwd=_SCRIPT_DIR,
 )
 
 system_prompt = """

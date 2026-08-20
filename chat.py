@@ -18,10 +18,15 @@ base_url = 'https://api.deepseek.com'
 model = "deepseek-v4-flash"
 
 # Create server parameters for stdio connection
+# 必须用当前解释器 (sys.executable, 即 .venv 里的 python) 拉起 server.py,
+# 不能用 PATH 里的 "python" —— 系统 Python 可能没装 mcp 库, 会导致
+# "ClientSession 初始化失败: Connection closed"。
+_SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 server_params = StdioServerParameters(
-    command="python",  # Executable
-    args=["server.py"],  # Optional command line arguments
-    env=None,  # Optional environment variables
+    command=sys.executable,                            # 与 webui.py 保持一致
+    args=[os.path.join(_SCRIPT_DIR, "server.py")],     # 绝对路径, 不依赖工作目录
+    env=None,
+    cwd=_SCRIPT_DIR,                                   # 固定工作目录为项目根目录
 )
             
 system_prompt = """

@@ -16,7 +16,7 @@ public sealed class GuiSettings
     public int Port { get; set; } = 8000;
     public double FontSize { get; set; } = 14;
     public string Accent { get; set; } = "#4D9FFF";      // 主题色
-    public string Background { get; set; } = "#FFFFFF";  // 背景色 (默认白色, 自动亮/暗主题)
+    public string Background { get; set; } = "#0C1117";  // 背景色 (默认深色, 与桌面版深色外壳一致)
 
     private const string FileName = "settings.json";
 
