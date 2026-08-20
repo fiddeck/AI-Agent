@@ -101,6 +101,7 @@ dependencies = [
         "pyinstaller==6.15.0",
         "pyinstaller-hooks-contrib==2025.8",
         "pyparsing==3.2.3",
+        "psutil==7.0.0",
         "pytesseract==0.3.13",
         "pytest==8.4.1",
         "python-bidi==0.6.6",
@@ -153,6 +154,10 @@ dependencies = [
         "werkzeug==3.1.3",
         "xlsxwriter==3.2.5",
 ]
+
+# 显式声明顶层模块, 避免 setuptools 扁平布局自动发现报错
+[tool.setuptools]
+py-modules = ["chat", "command", "server"]
 
 [[tool.uv.index]]
 url = "https://pypi.tuna.tsinghua.edu.cn/simple"

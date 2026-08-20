@@ -1,0 +1,90 @@
+﻿<Window
+    x:Class="AIAgentGUI.MainWindow"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    Title="AI Agent">
+
+    <Grid Background="#0B0F14" RequestedTheme="Dark">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="248"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+
+        <!-- ============ 侧边栏 ============ -->
+        <Grid Grid.Column="0" Background="#12171E" BorderBrush="#232C37" BorderThickness="0,0,1,0">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+
+            <TextBlock Grid.Row="0" Text="🦾  AI Agent" FontSize="15" FontWeight="Bold"
+                       Margin="14,14,14,10" Foreground="#E6EDF3"/>
+
+            <Button x:ConnectionId='8' Grid.Row="1" x:Name="NewChatBtn" Content="＋ 新建对话"
+                    Margin="10,0,10,10" HorizontalAlignment="Stretch"
+                    Background="#161D26" Foreground="#E6EDF3" BorderBrush="#232C37"
+                                         />
+
+            <ListView x:ConnectionId='9' Grid.Row="2" x:Name="SessionList" Background="Transparent"
+                      BorderThickness="0"                                                />
+
+            <TextBlock Grid.Row="3" Text="模型: deepseek-v4-flash&#x0a;工具: 15 个系统级 MCP"
+                       FontSize="11" Foreground="#8B98A5" Margin="14,10,14,12" TextWrapping="Wrap"/>
+        </Grid>
+
+        <!-- ============ 主区域 ============ -->
+        <Grid Grid.Column="1">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="48"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+
+            <!-- 顶栏 -->
+            <Grid Grid.Row="0" Background="#12171E" BorderBrush="#232C37" BorderThickness="0,0,0,1">
+                <StackPanel Orientation="Horizontal" Spacing="10" VerticalAlignment="Center" Margin="16,0">
+                    <TextBlock Text="AI Agent 工作台" FontWeight="Bold" FontSize="14" Foreground="#E6EDF3"/>
+                    <Border Background="#1C2A3F" CornerRadius="10" Padding="8,2">
+                        <TextBlock Text="deepseek-v4-flash" FontSize="11" Foreground="#4D9FFF"/>
+                    </Border>
+                    <StackPanel Orientation="Horizontal" Spacing="6" VerticalAlignment="Center">
+                        <Ellipse x:ConnectionId='6' x:Name="StatusDot" Width="8" Height="8" Fill="#3FB950" VerticalAlignment="Center"/>
+                        <TextBlock x:ConnectionId='7' x:Name="StatusText" Text="启动中…" FontSize="12" Foreground="#8B98A5"/>
+                    </StackPanel>
+                </StackPanel>
+            </Grid>
+
+            <!-- 消息区 -->
+            <ScrollViewer x:ConnectionId='2' Grid.Row="1" x:Name="MessageScroll" VerticalScrollBarVisibility="Auto"
+                          Padding="20,16" HorizontalScrollBarVisibility="Disabled">
+                <StackPanel x:ConnectionId='5' x:Name="MessagePanel" Spacing="14" HorizontalAlignment="Stretch"/>
+            </ScrollViewer>
+
+            <!-- 输入区 -->
+            <Grid Grid.Row="2" Background="#12171E" BorderBrush="#232C37" BorderThickness="0,1,0,0" Padding="20,12,20,16">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+                <Grid Grid.Row="0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+                    <TextBox x:ConnectionId='3' x:Name="InputBox" Grid.Column="0" PlaceholderText="输入消息，Enter 发送，Shift+Enter 换行…"
+                             AcceptsReturn="True" TextWrapping="Wrap" MaxHeight="140"
+                             Background="#161D26" BorderBrush="#232C37" Foreground="#E6EDF3"
+                                                       />
+                    <Button x:ConnectionId='4' x:Name="SendBtn" Grid.Column="1" Content="发送" Margin="10,0,0,0"
+                            VerticalAlignment="Stretch" Background="#1F6FEB" Foreground="White"
+                                              />
+                </Grid>
+                <TextBlock Grid.Row="1" Text="Agent 可执行 Python / Shell 命令、读写文件、查系统信息、控制进程，高危操作需你确认"
+                           FontSize="11" Foreground="#8B98A5" Margin="2,6,0,0"/>
+            </Grid>
+        </Grid>
+    </Grid>
+</Window>
+
