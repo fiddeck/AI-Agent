@@ -17,9 +17,9 @@ if %errorlevel% == 0 (
 echo 未检测到 Python，正在自动下载安装...
 
 :: 使用稳定的 Python 版本
-set "PYTHON_VERSION=3.13.5"
+set "PYTHON_VERSION=3.13.15"
 set "PYTHON_INSTALLER=python-installer.exe"
-set "PYTHON_URL=https://www.python.org/ftp/python/3.13.5/python-3.13.5-amd64.exe"
+set "PYTHON_URL=https://www.python.org/ftp/python/3.13.15/python-3.13.15-amd64.exe"
 
 echo 正在下载 Python %PYTHON_VERSION%...
 powershell -Command "Invoke-WebRequest -Uri '%PYTHON_URL%' -OutFile '%PYTHON_INSTALLER%' -UserAgent 'Mozilla/5.0'"
