@@ -110,6 +110,7 @@
 24. 同一会话多标签页互不同步，且历史里多条助手消息会挤进同一个气泡 → 服务端广播 `user_message`，前端按 sid 处理并重置气泡；`renderHistory` 每条助手消息新建容器。
 25. 根目录桌面快捷方式指向不存在的 `G:\...\AI-Agent - rc1\dist\...` → 指向当前项目 `dist\AI-Agent-GUI\`，并用新源码重新发布 self-contained 产物。
 26. 旧 dist 里的桌面端按 PascalCase 读设置，遇到网页版新写的 camelCase 会"丢设置" → 重新发布后使用大小写不敏感读取，彻底消除该问题。
+27. **桌面端设置按钮点击无效（"摆设"）** → 根因是 `SetTitleBar(AppTitleBar)` 把包含按钮的整条标题栏都设成拖拽区，按钮点击被系统当成拖动窗口（WindowsAppSDK #2574）。改为只把左侧列 0~3 的非交互区域设为拖拽区，设置按钮位于拖拽区之外；同时给 `ContentDialog.ShowAsync` 加异常兜底，并把点击/异常写入根目录 `gui.log`。已用 UI Automation 真实鼠标点击做 A/B 验证：修复前的 dist 无反应，修复后的 dist 正常弹出设置对话框。
 
 ## 三、架构变化
 
@@ -136,6 +137,7 @@ server.py ─ exec / 编码 / 截断            server.py ┘   ├ Settings / S
 | `python -m pytest` | **42 passed**（单元 + server 集成 + 真实子进程端到端） |
 | `python -m ruff check .` | All checks passed |
 | WinUI Debug/Release x64 构建 + self-contained 发布 | 成功，产物在 `dist/AI-Agent-GUI/` |
+| 桌面端设置按钮真实点击（UI Automation 模拟鼠标） | 修复前 dist：无反应 / 无日志；修复后 dist：对话框弹出，`gui.log` 记录点击 |
 | 网页版深色/浅色渲染 | Edge 无头截图核对（含两轮历史恢复），见 `docs/screenshots/` |
 
 ![深色主题](screenshots/webui-dark.png)

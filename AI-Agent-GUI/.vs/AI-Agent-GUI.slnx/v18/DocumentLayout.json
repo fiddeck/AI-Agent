@@ -1,26 +1,26 @@
 {
   "Version": 1,
-  "WorkspaceRootPath": "G:\\Python\u6587\u4EF6\\AI-Agent - rc1\\AI-Agent-GUI\\",
+  "WorkspaceRootPath": "G:\\Python\u6587\u4EF6\\AI-Agent 2.0\\AI-Agent-GUI\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{493568B8-211D-1ABD-1D17-894C50286B78}|AI-Agent-GUI.csproj|g:\\python\u6587\u4EF6\\ai-agent - rc1\\ai-agent-gui\\markdownrenderer.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{493568B8-211D-1ABD-1D17-894C50286B78}|AI-Agent-GUI.csproj|solutionrelative:markdownrenderer.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{493568B8-211D-1ABD-1D17-894C50286B78}|AI-Agent-GUI.csproj|g:\\python\u6587\u4EF6\\ai-agent - rc1\\ai-agent-gui\\settings.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "AbsoluteMoniker": "D:0:0:{493568B8-211D-1ABD-1D17-894C50286B78}|AI-Agent-GUI.csproj|g:\\python\u6587\u4EF6\\ai-agent 2.0\\ai-agent-gui\\settings.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{493568B8-211D-1ABD-1D17-894C50286B78}|AI-Agent-GUI.csproj|solutionrelative:settings.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{493568B8-211D-1ABD-1D17-894C50286B78}|AI-Agent-GUI.csproj|g:\\python\u6587\u4EF6\\ai-agent - rc1\\ai-agent-gui\\chatservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{493568B8-211D-1ABD-1D17-894C50286B78}|AI-Agent-GUI.csproj|solutionrelative:chatservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{493568B8-211D-1ABD-1D17-894C50286B78}|AI-Agent-GUI.csproj|g:\\python\u6587\u4EF6\\ai-agent - rc1\\ai-agent-gui\\app.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "AbsoluteMoniker": "D:0:0:{493568B8-211D-1ABD-1D17-894C50286B78}|AI-Agent-GUI.csproj|g:\\python\u6587\u4EF6\\ai-agent 2.0\\ai-agent-gui\\app.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{493568B8-211D-1ABD-1D17-894C50286B78}|AI-Agent-GUI.csproj|solutionrelative:app.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{493568B8-211D-1ABD-1D17-894C50286B78}|AI-Agent-GUI.csproj|g:\\python\u6587\u4EF6\\ai-agent - rc1\\ai-agent-gui\\ai-agent-gui.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|",
+      "AbsoluteMoniker": "D:0:0:{493568B8-211D-1ABD-1D17-894C50286B78}|AI-Agent-GUI.csproj|g:\\python\u6587\u4EF6\\ai-agent 2.0\\ai-agent-gui\\ai-agent-gui.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|",
       "RelativeMoniker": "D:0:0:{493568B8-211D-1ABD-1D17-894C50286B78}|AI-Agent-GUI.csproj|solutionrelative:ai-agent-gui.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{493568B8-211D-1ABD-1D17-894C50286B78}|AI-Agent-GUI.csproj|g:\\python\u6587\u4EF6\\ai-agent 2.0\\ai-agent-gui\\chatservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{493568B8-211D-1ABD-1D17-894C50286B78}|AI-Agent-GUI.csproj|solutionrelative:chatservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{493568B8-211D-1ABD-1D17-894C50286B78}|AI-Agent-GUI.csproj|g:\\python\u6587\u4EF6\\ai-agent 2.0\\ai-agent-gui\\markdownrenderer.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{493568B8-211D-1ABD-1D17-894C50286B78}|AI-Agent-GUI.csproj|solutionrelative:markdownrenderer.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
   "DocumentGroupContainers": [
@@ -30,7 +30,7 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 6,
+          "SelectedChildIndex": 7,
           "Children": [
             {
               "$type": "Bookmark",
@@ -58,50 +58,50 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 0,
+              "DocumentIndex": 4,
               "Title": "MarkdownRenderer.cs",
-              "DocumentMoniker": "G:\\Python\u6587\u4EF6\\AI-Agent - rc1\\AI-Agent-GUI\\MarkdownRenderer.cs",
+              "DocumentMoniker": "G:\\Python\u6587\u4EF6\\AI-Agent 2.0\\AI-Agent-GUI\\MarkdownRenderer.cs",
               "RelativeDocumentMoniker": "MarkdownRenderer.cs",
-              "ToolTip": "G:\\Python\u6587\u4EF6\\AI-Agent - rc1\\AI-Agent-GUI\\MarkdownRenderer.cs",
+              "ToolTip": "G:\\Python\u6587\u4EF6\\AI-Agent 2.0\\AI-Agent-GUI\\MarkdownRenderer.cs",
               "RelativeToolTip": "MarkdownRenderer.cs",
-              "ViewState": "AgIAAD8AAAAAAAAAAAAYwFEAAAArAAAAAAAAAA==",
+              "ViewState": "AgIAAEcAAAAAAAAAAAAgwFEAAAArAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2026-08-20T15:35:04.293Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 0,
               "Title": "Settings.cs",
-              "DocumentMoniker": "G:\\Python\u6587\u4EF6\\AI-Agent - rc1\\AI-Agent-GUI\\Settings.cs",
+              "DocumentMoniker": "G:\\Python\u6587\u4EF6\\AI-Agent 2.0\\AI-Agent-GUI\\Settings.cs",
               "RelativeDocumentMoniker": "Settings.cs",
-              "ToolTip": "G:\\Python\u6587\u4EF6\\AI-Agent - rc1\\AI-Agent-GUI\\Settings.cs",
+              "ToolTip": "G:\\Python\u6587\u4EF6\\AI-Agent 2.0\\AI-Agent-GUI\\Settings.cs",
               "RelativeToolTip": "Settings.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "ViewState": "AgIAAD8AAAAAAAAAAAA4wAAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2026-08-20T15:35:03.378Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 3,
               "Title": "ChatService.cs",
-              "DocumentMoniker": "G:\\Python\u6587\u4EF6\\AI-Agent - rc1\\AI-Agent-GUI\\ChatService.cs",
+              "DocumentMoniker": "G:\\Python\u6587\u4EF6\\AI-Agent 2.0\\AI-Agent-GUI\\ChatService.cs",
               "RelativeDocumentMoniker": "ChatService.cs",
-              "ToolTip": "G:\\Python\u6587\u4EF6\\AI-Agent - rc1\\AI-Agent-GUI\\ChatService.cs",
+              "ToolTip": "G:\\Python\u6587\u4EF6\\AI-Agent 2.0\\AI-Agent-GUI\\ChatService.cs",
               "RelativeToolTip": "ChatService.cs",
-              "ViewState": "AgIAAIcAAAAAAAAAAAAYwAAAAAAAAAAAAAAAAA==",
+              "ViewState": "AgIAAHMAAAAAAAAAAAAQwAAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2026-08-20T15:34:46.767Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 3,
+              "DocumentIndex": 1,
               "Title": "App.xaml.cs",
-              "DocumentMoniker": "G:\\Python\u6587\u4EF6\\AI-Agent - rc1\\AI-Agent-GUI\\App.xaml.cs",
+              "DocumentMoniker": "G:\\Python\u6587\u4EF6\\AI-Agent 2.0\\AI-Agent-GUI\\App.xaml.cs",
               "RelativeDocumentMoniker": "App.xaml.cs",
-              "ToolTip": "G:\\Python\u6587\u4EF6\\AI-Agent - rc1\\AI-Agent-GUI\\App.xaml.cs",
+              "ToolTip": "G:\\Python\u6587\u4EF6\\AI-Agent 2.0\\AI-Agent-GUI\\App.xaml.cs",
               "RelativeToolTip": "App.xaml.cs",
               "ViewState": "AgIAAAMAAAAAAAAAAADwvw0AAAAcAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
@@ -110,11 +110,11 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 4,
-              "Title": "AI-Agent-GUI",
-              "DocumentMoniker": "G:\\Python\u6587\u4EF6\\AI-Agent - rc1\\AI-Agent-GUI\\AI-Agent-GUI.csproj",
+              "DocumentIndex": 2,
+              "Title": "AI-Agent-GUI.csproj",
+              "DocumentMoniker": "G:\\Python\u6587\u4EF6\\AI-Agent 2.0\\AI-Agent-GUI\\AI-Agent-GUI.csproj",
               "RelativeDocumentMoniker": "AI-Agent-GUI.csproj",
-              "ToolTip": "G:\\Python\u6587\u4EF6\\AI-Agent - rc1\\AI-Agent-GUI\\AI-Agent-GUI.csproj",
+              "ToolTip": "G:\\Python\u6587\u4EF6\\AI-Agent 2.0\\AI-Agent-GUI\\AI-Agent-GUI.csproj",
               "RelativeToolTip": "AI-Agent-GUI.csproj",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000758|",

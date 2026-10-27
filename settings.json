@@ -3,7 +3,7 @@
   "baseUrl": "https://api.deepseek.com",
   "apiKey": "",
   "port": 8000,
-  "fontSize": 14.0,
+  "fontSize": 14,
   "accent": "#4D9FFF",
-  "background": "#0C1117"
+  "background": "#F0F2F5"
 }

@@ -1,15 +1,15 @@
-[18:11:26] === AI-Agent webui 日志 ===
+[19:52:12] === AI-Agent webui 日志 ===
 [stdout]
-[webui] 请打开: http://127.0.0.1:8001
-INFO:     127.0.0.1:50494 - "GET / HTTP/1.1" 200 OK
 
 [stderr]
-INFO:     Started server process [34432]
+INFO:     Started server process [2292]
 INFO:     Waiting for application startup.
+[10/27/26 19:52:14] INFO     Processing request of type           server.py:625
+                             ListToolsRequest                                  
+19:52:14 INFO ai-agent: MCP 已连接，可用工具 15 个: run_python_code, run_shell_command, list_files, read_file, write_file, search_files, delete_file, get_system_info, list_processes, kill_process, get_clipboard, set_clipboard, open_url, take_screenshot, get_datetime
 INFO:     Application startup complete.
 INFO:     Uvicorn running on http://127.0.0.1:8001 (Press CTRL+C to quit)
-INFO:     127.0.0.1:50500 - "WebSocket /ws" [accepted]
+INFO:     127.0.0.1:55552 - "WebSocket /ws" [accepted]
 INFO:     connection open
-[08/20/26 18:11:28] INFO     Processing request of type           server.py:625
-                             ListToolsRequest                                  
+19:52:59 INFO httpx: HTTP Request: POST https://api.deepseek.com/chat/completions "HTTP/1.1 200 OK"
 
