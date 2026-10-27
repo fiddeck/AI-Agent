@@ -1,0 +1,15 @@
+[18:11:26] === AI-Agent webui 日志 ===
+[stdout]
+[webui] 请打开: http://127.0.0.1:8001
+INFO:     127.0.0.1:50494 - "GET / HTTP/1.1" 200 OK
+
+[stderr]
+INFO:     Started server process [34432]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://127.0.0.1:8001 (Press CTRL+C to quit)
+INFO:     127.0.0.1:50500 - "WebSocket /ws" [accepted]
+INFO:     connection open
+[08/20/26 18:11:28] INFO     Processing request of type           server.py:625
+                             ListToolsRequest                                  
+

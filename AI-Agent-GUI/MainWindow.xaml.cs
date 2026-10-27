@@ -13,6 +13,8 @@ using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
 using Windows.System;
 using Microsoft.UI.Text;
+using Windows.Graphics;
+using Windows.UI;
 using DispatcherQueue = Microsoft.UI.Dispatching.DispatcherQueue;
 
 namespace AIAgentGUI;
@@ -27,9 +29,10 @@ public sealed partial class MainWindow : Window
 
     private int _port = DefaultPort;   // 实际使用端口 (被占用时自动顺延)
 
-    private GuiSettings _settings = new();   // 自定义设置 (gui_settings.json)
+    private GuiSettings _settings = new();   // 自定义设置 (settings.json)
     private string? _projectRoot;
     private double _fontSize = 14;           // 消息字号
+    private int _toolCount;                  // 后端实际提供的 MCP 工具数量
 
     private static readonly HttpClient Http = new() { Timeout = TimeSpan.FromSeconds(1) };
 
@@ -49,11 +52,19 @@ public sealed partial class MainWindow : Window
     public MainWindow()
     {
         InitializeComponent();
-        try
-        {
-            AppWindow.Resize(new Windows.Graphics.SizeInt32(1100, 720));
-        }
-        catch { /* 部分环境不支持, 忽略 */ }
+
+        // 按 WinUI 3 规范自定义标题栏:
+        // 内容延伸到标题栏后, 用 SetTitleBar(UIElement) 指定拖拽区 —— 拖拽、双击最大化、
+        // 系统菜单、贴边布局、DPI 换算全部由系统处理。
+        // 不要用 AppWindow.TitleBar.SetDragRectangles 手动计算拖拽矩形: 该 API 以物理像素
+        // 工作而 XAML 尺寸是 DIP, 在不同缩放比例的机器上会错位 (表现为窗口拖不动)。
+        ExtendsContentIntoTitleBar = true;
+        SetTitleBar(AppTitleBar);
+        ApplyTitleBarColors();
+
+        // 初始尺寸放到 Loaded 里做, 以便拿到 RasterizationScale 做 DPI 换算
+        RootGrid.Loaded += (_, _) => ResizeToDefault();
+
         Closed += (_, _) =>
         {
             try
@@ -66,10 +77,59 @@ public sealed partial class MainWindow : Window
         _ = InitAsync();
     }
 
+    // ==================== 标题栏 ====================
+
+    /// <summary>系统标题栏按钮配色 (跟随深浅主题)。旧系统不支持时保持系统默认。</summary>
+    private void ApplyTitleBarColors()
+    {
+        try
+        {
+            var tb = AppWindow.TitleBar;
+            var dark = UiColors.IsDarkTheme;
+            tb.ButtonBackgroundColor = Color.FromArgb(0, 0, 0, 0);
+            tb.ButtonInactiveBackgroundColor = Color.FromArgb(0, 0, 0, 0);
+            tb.ButtonHoverBackgroundColor = dark
+                ? Color.FromArgb(26, 255, 255, 255)
+                : Color.FromArgb(20, 0, 0, 0);
+            tb.ButtonPressedBackgroundColor = dark
+                ? Color.FromArgb(45, 255, 255, 255)
+                : Color.FromArgb(36, 0, 0, 0);
+            tb.ButtonForegroundColor = dark
+                ? Color.FromArgb(255, 255, 255, 255)
+                : Color.FromArgb(255, 32, 38, 45);
+            tb.ButtonInactiveForegroundColor = dark
+                ? Color.FromArgb(150, 255, 255, 255)
+                : Color.FromArgb(120, 32, 38, 45);
+        }
+        catch { /* 个别系统版本不支持标题栏配色, 回退系统默认 */ }
+    }
+
+    /// <summary>
+    /// 初始窗口尺寸: 以 DIP 设计值 (1100x720) 乘以当前缩放比换算为物理像素,
+    /// 并收敛到工作区 90% 以内、居中显示, 避免高分屏/小屏幕上窗口过大或过小。
+    /// </summary>
+    private void ResizeToDefault()
+    {
+        try
+        {
+            var area = DisplayArea.GetFromWindowId(AppWindow.Id, DisplayAreaFallback.Primary);
+            var work = area.WorkArea;   // 物理像素
+            double scale = RootGrid.XamlRoot?.RasterizationScale ?? 1.0;
+            int w = (int)Math.Min(1100 * scale, work.Width * 0.9);
+            int h = (int)Math.Min(720 * scale, work.Height * 0.9);
+            AppWindow.Resize(new SizeInt32(w, h));
+            AppWindow.Move(new PointInt32(
+                work.X + (work.Width - w) / 2,
+                work.Y + (work.Height - h) / 2));
+        }
+        catch { /* 部分环境不支持, 保持系统默认尺寸 */ }
+    }
+
     // ==================== 初始化 ====================
 
     private async Task InitAsync()
     {
+        _chat.Ready += (tools, model) => Dispatch(() => OnBackendReady(tools, model));
         _chat.SessionChanged += sid => Dispatch(() =>
         {
             _currentSid = sid;
@@ -82,12 +142,17 @@ public sealed partial class MainWindow : Window
             _currentSid = sid;
             RenderHistory(msgs);
         });
+        _chat.UserMessageReceived += text => Dispatch(() => OnUserMessage(text));
         _chat.TokenReceived += c => Dispatch(() => OnToken(c));
         _chat.ToolCallReceived += (n, a) => Dispatch(() => AddToolCard(n, a));
         _chat.ToolResultReceived += (_, c) => Dispatch(() => SetToolResult(c));
-        _chat.TurnDone += () => Dispatch(() => OnDone());
+        _chat.TurnDone += stopped => Dispatch(() => OnDone(stopped));
         _chat.ErrorReceived += msg => Dispatch(() => OnError(msg));
-        _chat.Disconnected += () => Dispatch(() => SetStatus("连接断开, 请重启应用", false));
+        _chat.Disconnected += () => Dispatch(() =>
+        {
+            SetStatus("连接断开, 请重启应用", false);
+            SetComposerState(false);
+        });
 
         // 加载自定义设置 (模型/地址/密钥/端口/字号/主题色)
         _projectRoot = FindProjectRoot();
@@ -108,7 +173,9 @@ public sealed partial class MainWindow : Window
                 "无法启动后端服务:\n" + reason + "\n\n排查步骤:\n" +
                 "1) 确认环境变量 OPENAI_API_KEY 已设置 (建议用 setx 设为系统变量后重启应用)\n" +
                 "2) 确认依赖已装齐: .venv\\Scripts\\python -c \"import fastapi,uvicorn,websockets\"\n" +
-                "3) 双击项目根目录 webui.bat 前台运行, 直接看后端真实报错"));
+                "3) 双击项目根目录 webui.bat 前台运行, 直接看后端真实报错\n" +
+                "4) 若是从其他电脑拷贝的项目: 旧 .venv 绑定原电脑 Python 路径,\n" +
+                "   请先双击项目根目录 修复环境.bat 重建虚拟环境再启动"));
             return;
         }
         SetStatus("正在连接…", true);
@@ -123,7 +190,8 @@ public sealed partial class MainWindow : Window
                 "\n\n请确认后端已启动 (可先运行 webui.bat 验证后再启动本程序)"));
             return;
         }
-        await _chat.SendNewChat();
+        // 后端连接成功后会主动下发 ready/session/history: 恢复最近一次会话。
+        // 不再在启动时强制新建对话，否则每次打开应用都会多出一个空会话。
 
         // 首次使用: 设置与环境变量都没有 API Key 时, 自动弹窗引导配置
         if (string.IsNullOrEmpty(_settings.ApiKey) &&
@@ -336,7 +404,7 @@ public sealed partial class MainWindow : Window
         _assistantContent = null;
         _assistantTools = null;
         _lastResultText = null;
-        _streaming = false;
+        SetComposerState(false);
     }
 
     private void RefreshSessions(List<SessionInfo> list)
@@ -369,16 +437,19 @@ public sealed partial class MainWindow : Window
             Text = text,
             TextWrapping = TextWrapping.Wrap,
             FontSize = _fontSize,
+            LineHeight = _fontSize + 6,
             Foreground = UiColors.Brush(UiColors.Text),
             IsTextSelectionEnabled = true,
         };
         var border = new Border
         {
             Background = UiColors.Brush(UiColors.UserBubble),
-            CornerRadius = new CornerRadius(12, 4, 12, 12),
-            Padding = new Thickness(12, 9, 12, 9),
+            BorderBrush = UiColors.Brush(UiColors.Border),
+            BorderThickness = new Thickness(1),
+            CornerRadius = new CornerRadius(14, 14, 4, 14),
+            Padding = new Thickness(14, 10, 14, 10),
             HorizontalAlignment = HorizontalAlignment.Right,
-            MaxWidth = 560,
+            MaxWidth = 640,
             Child = tb,
         };
         MessagePanel.Children.Add(border);
@@ -387,23 +458,75 @@ public sealed partial class MainWindow : Window
 
     private void BeginAssistantMessage()
     {
+        // 头像 + 内容列
+        var avatar = new Border
+        {
+            Width = 34,
+            Height = 34,
+            CornerRadius = new CornerRadius(17),
+            Background = UiColors.AccentGradient,
+            VerticalAlignment = VerticalAlignment.Top,
+            Child = new TextBlock
+            {
+                Text = "🤖",
+                FontSize = 15,
+                HorizontalAlignment = HorizontalAlignment.Center,
+                VerticalAlignment = VerticalAlignment.Center,
+            },
+        };
+
         var content = new StackPanel { Spacing = 6 };
         var tools = new StackPanel { Spacing = 6 };
-        var panel = new StackPanel { Spacing = 8 };
-        panel.Children.Add(content);
-        panel.Children.Add(tools);
+        var body = new StackPanel { Spacing = 8 };
+        body.Children.Add(content);
+        body.Children.Add(tools);
 
-        var border = new Border
+        var card = new Border
         {
             Background = UiColors.Brush(UiColors.Panel2),
             BorderBrush = UiColors.Brush(UiColors.Border),
             BorderThickness = new Thickness(1),
-            CornerRadius = new CornerRadius(4, 12, 12, 12),
-            Padding = new Thickness(12, 10, 12, 10),
-            HorizontalAlignment = HorizontalAlignment.Stretch,
-            Child = panel,
+            CornerRadius = new CornerRadius(4, 14, 14, 14),
+            Padding = new Thickness(14, 10, 14, 10),
+            Child = body,
         };
-        MessagePanel.Children.Add(border);
+
+        var nameRow = new StackPanel
+        {
+            Orientation = Orientation.Horizontal,
+            Spacing = 8,
+            Margin = new Thickness(0, 0, 0, 4),
+        };
+        nameRow.Children.Add(new TextBlock
+        {
+            Text = "AI Agent",
+            FontSize = 11.5,
+            FontWeight = FontWeights.SemiBold,
+            Foreground = UiColors.Brush(UiColors.Muted),
+        });
+        nameRow.Children.Add(new TextBlock
+        {
+            Text = "刚刚",
+            FontSize = 10.5,
+            Foreground = UiColors.Brush(UiColors.Muted),
+            Opacity = 0.7,
+        });
+
+        var col = new StackPanel { Spacing = 0 };
+        col.Children.Add(nameRow);
+        col.Children.Add(card);
+
+        var row = new StackPanel
+        {
+            Orientation = Orientation.Horizontal,
+            Spacing = 10,
+            HorizontalAlignment = HorizontalAlignment.Stretch,
+            MaxWidth = 780,
+        };
+        row.Children.Add(avatar);
+        row.Children.Add(col);
+
+        MessagePanel.Children.Add(row);
         _assistantContent = content;
         _assistantTools = tools;
     }
@@ -453,11 +576,13 @@ public sealed partial class MainWindow : Window
 
         if (streaming)
         {
-            _assistantContent.Children.Add(new TextBlock
+            _assistantContent.Children.Add(new ProgressRing
             {
-                Text = "▍",
-                FontSize = _fontSize,
+                Width = 13,
+                Height = 13,
+                IsActive = true,
                 Foreground = UiColors.Brush(UiColors.Accent),
+                Margin = new Thickness(4, 7, 0, 0),
             });
         }
     }
@@ -477,13 +602,30 @@ public sealed partial class MainWindow : Window
     {
         if (_assistantTools == null) return;
 
+        var icon = new Border
+        {
+            Width = 24,
+            Height = 24,
+            CornerRadius = new CornerRadius(6),
+            Background = UiColors.Brush(UiColors.BadgeBg),
+            VerticalAlignment = VerticalAlignment.Center,
+            Child = new TextBlock
+            {
+                Text = "🔧",
+                FontSize = 12,
+                HorizontalAlignment = HorizontalAlignment.Center,
+                VerticalAlignment = VerticalAlignment.Center,
+            },
+        };
         var header = new StackPanel { Orientation = Orientation.Horizontal, Spacing = 8 };
+        header.Children.Add(icon);
         header.Children.Add(new TextBlock
         {
-            Text = "🔧 " + name,
+            Text = name,
             FontSize = 12.5,
             FontWeight = FontWeights.SemiBold,
             Foreground = UiColors.Brush(UiColors.Accent),
+            VerticalAlignment = VerticalAlignment.Center,
         });
         var argsShort = args.Replace("\n", " ");
         if (argsShort.Length > 60) argsShort = argsShort.Substring(0, 60) + "…";
@@ -494,6 +636,7 @@ public sealed partial class MainWindow : Window
             Foreground = UiColors.Brush(UiColors.Muted),
             TextTrimming = TextTrimming.CharacterEllipsis,
             MaxWidth = 420,
+            VerticalAlignment = VerticalAlignment.Center,
         });
 
         var body = new StackPanel { Spacing = 6 };
@@ -524,6 +667,10 @@ public sealed partial class MainWindow : Window
             Background = UiColors.Brush(UiColors.Panel2),
             BorderBrush = UiColors.Brush(UiColors.Border),
             BorderThickness = new Thickness(1),
+            CornerRadius = new CornerRadius(10),
+            HorizontalAlignment = HorizontalAlignment.Stretch,
+            MaxWidth = 560,
+            HorizontalContentAlignment = HorizontalAlignment.Stretch,
         });
         ScrollToBottom();
     }
@@ -555,6 +702,19 @@ public sealed partial class MainWindow : Window
 
     // ==================== 事件: 后端 ====================
 
+    /// <summary>用户消息由服务端回显: 本窗口与其他查看同一会话的客户端渲染一致，不重复插入。</summary>
+    private void OnUserMessage(string text)
+    {
+        if (string.IsNullOrEmpty(text)) return;
+        AddUserMessage(text);
+        _acc = "";
+        _assistantContent = null;
+        _assistantTools = null;
+        _lastResultText = null;
+        SetComposerState(true);
+        SetStatus("正在思考…", true);
+    }
+
     private void OnToken(string content)
     {
         if (_assistantContent == null) BeginAssistantMessage();
@@ -563,18 +723,18 @@ public sealed partial class MainWindow : Window
         ScrollToBottom();
     }
 
-    private void OnDone()
+    private void OnDone(bool stopped)
     {
         if (_assistantContent != null) RenderAssistantText(_acc, false);
-        _streaming = false;
-        SetStatus("已连接", false);
+        SetComposerState(false);
+        SetStatus(stopped ? "已停止" : "已连接", false);
         ScrollToBottom();
     }
 
     private void OnError(string message)
     {
         if (_assistantContent != null) RenderAssistantText(_acc, false);
-        _streaming = false;
+        SetComposerState(false);
         var tb = new TextBlock
         {
             Text = "⚠️ " + message,
@@ -597,7 +757,7 @@ public sealed partial class MainWindow : Window
 
     private void ShowFatal(string message)
     {
-        _streaming = false;
+        SetComposerState(false);
         var tb = new TextBlock
         {
             Text = message,
@@ -609,9 +769,41 @@ public sealed partial class MainWindow : Window
         SetStatus("启动失败", false);
     }
 
+    private void OnBackendReady(int tools, string model)
+    {
+        if (tools > 0) _toolCount = tools;
+        if (!string.IsNullOrWhiteSpace(model)) ModelBadge.Text = model;
+        UpdateFooter();
+    }
+
+    private void UpdateFooter()
+    {
+        var model = string.IsNullOrWhiteSpace(ModelBadge.Text) ? _settings.Model : ModelBadge.Text;
+        var tools = _toolCount > 0 ? _toolCount.ToString() : "—";
+        SidebarFooter.Text = $"模型: {model}\n工具: {tools} 个系统级 MCP";
+    }
+
+    /// <summary>生成中把发送按钮换成停止按钮，并锁住会打断当前回合的操作。</summary>
+    private void SetComposerState(bool streaming)
+    {
+        _streaming = streaming;
+        SendBtn.Visibility = streaming ? Visibility.Collapsed : Visibility.Visible;
+        StopBtn.Visibility = streaming ? Visibility.Visible : Visibility.Collapsed;
+        SendBtn.IsEnabled = !streaming && !string.IsNullOrWhiteSpace(InputBox.Text);
+        NewChatBtn.IsEnabled = !streaming;
+        SessionList.IsEnabled = !streaming;
+    }
+
     // ==================== 事件: UI ====================
 
     private void Send_Click(object sender, RoutedEventArgs e) => SendMessage();
+
+    private async void Stop_Click(object sender, RoutedEventArgs e)
+    {
+        if (!_streaming) return;
+        SetStatus("正在停止…", true);
+        await _chat.SendStop(_currentSid);
+    }
 
     private void InputBox_KeyDown(object sender, KeyRoutedEventArgs e)
     {
@@ -672,6 +864,7 @@ public sealed partial class MainWindow : Window
                 ShowInlineError("后端配置已变更, 正在重启后端…");
                 try { if (!_serverProcess.HasExited) _serverProcess.Kill(); } catch { }
                 _serverProcess = null;
+                _toolCount = 0;
                 var (ok, reason) = await EnsureServerAsync();
                 if (!ok)
                 {
@@ -680,8 +873,8 @@ public sealed partial class MainWindow : Window
                 }
                 try { _chat.Close(); } catch { }
                 await _chat.ConnectAsync($"ws://127.0.0.1:{_port}/ws");
-                await _chat.SendNewChat();
                 SetStatus("已连接", false);
+                // 重连后由后端主动下发 session/history，无需再新建对话
             }
             else
             {
@@ -694,35 +887,48 @@ public sealed partial class MainWindow : Window
     {
         ApplyTheme();
         ModelBadge.Text = _settings.Model;
-        SidebarFooter.Text = $"模型: {_settings.Model}\n工具: 15 个系统级 MCP";
+        UpdateFooter();
     }
 
-    /// <summary>按当前配色给静态 XAML 元素换肤 (消息气泡等动态元素直接用 UiColors)。</summary>
+    /// <summary>按当前配色给界面换肤: 标题栏/侧栏/输入坞/消息区全部跟随主题。</summary>
     private void ApplyTheme()
     {
         try
         {
-            RootGrid.RequestedTheme = UiColors.IsDarkTheme ? ElementTheme.Dark : ElementTheme.Light;
+            var dark = UiColors.IsDarkTheme;
+            RootGrid.RequestedTheme = dark ? ElementTheme.Dark : ElementTheme.Light;
             RootGrid.Background = UiColors.Brush(UiColors.Background);
+
+            AppTitleBar.Background = UiColors.Brush(UiColors.Panel);
+            AppTitleBar.BorderBrush = UiColors.Brush(UiColors.Border);
+            AppTitleText.Foreground = UiColors.Brush(UiColors.Text);
+            SettingsBtn.Foreground = UiColors.Brush(UiColors.Muted);
+            LogoBadge.Background = UiColors.AccentGradient;
+
             SidebarPanel.Background = UiColors.Brush(UiColors.Panel);
             SidebarPanel.BorderBrush = UiColors.Brush(UiColors.Border);
-            HeaderPanel.Background = UiColors.Brush(UiColors.Panel);
-            HeaderPanel.BorderBrush = UiColors.Brush(UiColors.Border);
+            SidebarFooterCard.Background = UiColors.Brush(UiColors.Panel2);
+            SessionList.Foreground = UiColors.Brush(UiColors.Text);
+
+            NewChatBtn.Background = UiColors.AccentGradient;
+            SendBtn.Background = UiColors.AccentGradient;
+            StopBtn.Background = UiColors.Brush(UiColors.Danger);
+            ModelBadgeBorder.Background = UiColors.Brush(UiColors.BadgeBg);
+            ModelBadge.Foreground = UiColors.Brush(UiColors.Accent);
+
+            StatusText.Foreground = UiColors.Brush(UiColors.Muted);
+            FooterStatus.Foreground = UiColors.Brush(UiColors.Muted);
+            FooterDot.Fill = UiColors.Brush(UiColors.Green);
+            SidebarFooter.Foreground = UiColors.Brush(UiColors.Muted);
+            InputHint.Foreground = UiColors.Brush(UiColors.Muted);
+
             InputPanel.Background = UiColors.Brush(UiColors.Panel);
             InputPanel.BorderBrush = UiColors.Brush(UiColors.Border);
-            NewChatBtn.Background = UiColors.Brush(UiColors.Panel2);
-            NewChatBtn.BorderBrush = UiColors.Brush(UiColors.Border);
-            NewChatBtn.Foreground = UiColors.Brush(UiColors.Text);
-            SettingsBtn.Background = UiColors.Brush(UiColors.Panel2);
-            SettingsBtn.BorderBrush = UiColors.Brush(UiColors.Border);
-            SettingsBtn.Foreground = UiColors.Brush(UiColors.Muted);
-            SendBtn.Background = UiColors.Brush(UiColors.AccentDark);
-            ModelBadgeBorder.Background = UiColors.Brush(UiColors.BadgeBg);
-            StatusText.Foreground = UiColors.Brush(UiColors.Muted);
-            SidebarFooter.Foreground = UiColors.Brush(UiColors.Muted);
-            InputBox.Background = UiColors.Brush(UiColors.Panel2);
-            InputBox.BorderBrush = UiColors.Brush(UiColors.Border);
+            InputShell.Background = UiColors.Brush(UiColors.Panel2);
+            InputShell.BorderBrush = UiColors.Brush(UiColors.Border);
             InputBox.Foreground = UiColors.Brush(UiColors.Text);
+
+            ApplyTitleBarColors();
         }
         catch
         {
@@ -730,17 +936,31 @@ public sealed partial class MainWindow : Window
         }
     }
 
+    private void InputBox_TextChanged(object sender, TextChangedEventArgs e)
+    {
+        SendBtn.IsEnabled = !_streaming && !string.IsNullOrWhiteSpace(InputBox.Text);
+    }
+
+    private void InputBox_GotFocus(object sender, RoutedEventArgs e)
+    {
+        try { InputShell.BorderBrush = UiColors.Brush(UiColors.Accent); } catch { }
+    }
+
+    private void InputBox_LostFocus(object sender, RoutedEventArgs e)
+    {
+        try { InputShell.BorderBrush = UiColors.Brush(UiColors.Border); } catch { }
+    }
+
     private void SendMessage()
     {
         var text = InputBox.Text.Trim();
         if (string.IsNullOrEmpty(text) || _currentSid == null || _streaming) return;
         InputBox.Text = "";
-        AddUserMessage(text);
         _acc = "";
         _assistantContent = null;
         _assistantTools = null;
         _lastResultText = null;
-        _streaming = true;
+        SetComposerState(true);
         SetStatus("正在思考…", true);
         _ = _chat.SendChat(_currentSid, text);
     }

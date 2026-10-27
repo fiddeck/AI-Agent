@@ -1,5 +1,6 @@
 using System;
 using Windows.UI;
+using Windows.Foundation;
 using Microsoft.UI.Xaml.Media;
 
 namespace AIAgentGUI;
@@ -23,8 +24,13 @@ public static class UiColors
     public static Color CodeText = Hex("#24292F");
     public static Color Accent = Hex("#4D9FFF");
     public static Color AccentDark = Hex("#1F6FEB");
+    public static Color AccentSoft = Hex("#1F6FEB");     // 主题色淡染 (选中/悬浮底)
+    public static Color TextOnAccent = Hex("#FFFFFF");
     public static Color UserBubble = Hex("#DDEBFF");
     public static Color BadgeBg = Hex("#DCEBFA");
+
+    /// <summary>主题色 -> 深色渐变 (按钮/头像)。</summary>
+    public static LinearGradientBrush AccentGradient = BuildGradient(Hex("#4D9FFF"), Hex("#1F6FEB"));
 
     public static readonly Color Danger = Hex("#F85149");
     public static readonly Color Green = Hex("#3FB950");
@@ -45,12 +51,15 @@ public static class UiColors
             Background = bg;
             IsDarkTheme = Luminance(bg) < 128;
             AccentDark = Darken(accent, 0.62f);
+            AccentSoft = Blend(accent, bg, 0.18);
+            TextOnAccent = Hex(IsDarkTheme ? "#FFFFFF" : "#0B1220");
             UserBubble = Blend(accent, bg, 0.22);
             BadgeBg = Blend(accent, bg, 0.12);
+            AccentGradient = BuildGradient(accent, AccentDark);
 
             if (IsDarkTheme)
             {
-                Panel = Blend(bg, Hex("#12171E"), 0.65);
+                Panel = Blend(bg, Hex("#10151C"), 0.65);
                 Panel2 = Blend(bg, Hex("#161D26"), 0.8);
                 Border = Hex("#232C37");
                 Text = Hex("#E6EDF3");
@@ -73,6 +82,20 @@ public static class UiColors
         {
             // 非法颜色保持默认
         }
+    }
+
+    private static LinearGradientBrush BuildGradient(Color from, Color to)
+    {
+        return new LinearGradientBrush
+        {
+            StartPoint = new Point(0, 0),
+            EndPoint = new Point(1, 1),
+            GradientStops =
+            {
+                new GradientStop { Color = from, Offset = 0 },
+                new GradientStop { Color = to, Offset = 1 },
+            },
+        };
     }
 
     private static double Luminance(Color c) => 0.2126 * c.R + 0.7152 * c.G + 0.0722 * c.B;

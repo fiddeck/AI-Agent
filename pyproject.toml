@@ -157,8 +157,23 @@ dependencies = [
 
 # 显式声明顶层模块, 避免 setuptools 扁平布局自动发现报错
 [tool.setuptools]
-py-modules = ["chat", "command", "server"]
+py-modules = ["agent_core", "chat", "command", "server", "webui", "webui_page"]
 
 [[tool.uv.index]]
 url = "https://pypi.tuna.tsinghua.edu.cn/simple"
 default = true
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-q"
+filterwarnings = ["ignore::DeprecationWarning"]
+markers = ["e2e: 启动真实子进程/浏览器的端到端测试"]
+
+[tool.ruff]
+line-length = 110
+target-version = "py313"
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I"]
+ignore = ["E501"]
+
