@@ -408,7 +408,7 @@ G:\Python文件\AI-Agent - rc1\dist\AI-Agent-GUI\createdump.exe
 G:\Python文件\AI-Agent - rc1\dist\AI-Agent-GUI\hostfxr.dll
 G:\Python文件\AI-Agent - rc1\dist\AI-Agent-GUI\hostpolicy.dll
 G:\Python文件\AI-Agent - rc1\dist\AI-Agent-GUI\mscordaccore.dll
-G:\Python文件\AI-Agent - rc1\dist\AI-Agent-GUI\mscordaccore_amd64_amd64_8.0.3026.36720.dll
+G:\Python文件\AI-Agent - rc1\dist\AI-Agent-GUI\mscordaccore_amd64_amd64_8.0.3226.50405.dll
 G:\Python文件\AI-Agent - rc1\dist\AI-Agent-GUI\mscordbi.dll
 G:\Python文件\AI-Agent - rc1\dist\AI-Agent-GUI\mscorrc.dll
 G:\Python文件\AI-Agent - rc1\dist\AI-Agent-GUI\msquic.dll
