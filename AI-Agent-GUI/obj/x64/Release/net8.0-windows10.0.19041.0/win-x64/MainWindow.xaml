@@ -33,12 +33,12 @@
 
             <StackPanel Grid.Column="2" Orientation="Horizontal" Spacing="12"
                         VerticalAlignment="Center" Margin="16,0,0,0">
-                <Border x:ConnectionId='23' x:Name="ModelBadgeBorder" Background="#14243A" CornerRadius="10" Padding="9,2.5">
-                    <TextBlock x:ConnectionId='26' x:Name="ModelBadge" Text="deepseek-v4-flash" FontSize="10.5" Foreground="#4D9FFF"/>
+                <Border x:ConnectionId='24' x:Name="ModelBadgeBorder" Background="#14243A" CornerRadius="10" Padding="9,2.5">
+                    <TextBlock x:ConnectionId='27' x:Name="ModelBadge" Text="deepseek-v4-flash" FontSize="10.5" Foreground="#4D9FFF"/>
                 </Border>
                 <StackPanel Orientation="Horizontal" Spacing="6" VerticalAlignment="Center">
-                    <Ellipse x:ConnectionId='24' x:Name="StatusDot" Width="8" Height="8" Fill="#3FB950" VerticalAlignment="Center"/>
-                    <TextBlock x:ConnectionId='25' x:Name="StatusText" Text="启动中…" FontSize="11.5" Foreground="#8B98A5"/>
+                    <Ellipse x:ConnectionId='25' x:Name="StatusDot" Width="8" Height="8" Fill="#3FB950" VerticalAlignment="Center"/>
+                    <TextBlock x:ConnectionId='26' x:Name="StatusText" Text="启动中…" FontSize="11.5" Foreground="#8B98A5"/>
                 </StackPanel>
             </StackPanel>
 
@@ -46,10 +46,16 @@
                                            VerticalAlignment="Center" Margin="0,0,10,0">
                 <StackPanel Orientation="Horizontal" Spacing="6">
                     <FontIcon Glyph="&#xE713;" FontSize="13"
-                              FontFamily="{ThemeResource SymbolThemeFontFamily}" Foreground="#8B98A5"/>
-                    <TextBlock Text="设置" FontSize="12.5" Foreground="#C9D4DE"/>
+                              FontFamily="{ThemeResource SymbolThemeFontFamily}"/>
+                    <TextBlock Text="设置" FontSize="12.5"/>
                 </StackPanel>
             </Button>
+
+            <!-- 拖拽区: 只覆盖左侧非交互区域(列 0~3)，绝不能覆盖右侧设置按钮。
+                 WinUI 3 的 SetTitleBar 会把指定元素的整个区域当作标题栏拖拽区，
+                 若该区域包含按钮，按钮点击会被系统当成拖动窗口而失效。 -->
+            <Grid x:ConnectionId='23' x:Name="TitleBarDragArea" Grid.Column="0" Grid.ColumnSpan="4"
+                  Background="Transparent"/>
         </Grid>
 
         <!-- ============ 内容区 ============ -->

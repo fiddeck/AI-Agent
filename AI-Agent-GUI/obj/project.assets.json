@@ -1229,11 +1229,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "G:\\Python文件\\AI-Agent - rc1\\AI-Agent-GUI\\AI-Agent-GUI.csproj",
+      "projectUniqueName": "G:\\Python文件\\AI-Agent 2.0\\AI-Agent-GUI\\AI-Agent-GUI.csproj",
       "projectName": "AI-Agent-GUI",
-      "projectPath": "G:\\Python文件\\AI-Agent - rc1\\AI-Agent-GUI\\AI-Agent-GUI.csproj",
+      "projectPath": "G:\\Python文件\\AI-Agent 2.0\\AI-Agent-GUI\\AI-Agent-GUI.csproj",
       "packagesPath": "C:\\Users\\wangy\\.nuget\\packages\\",
-      "outputPath": "G:\\Python文件\\AI-Agent - rc1\\AI-Agent-GUI\\obj\\",
+      "outputPath": "G:\\Python文件\\AI-Agent 2.0\\AI-Agent-GUI\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"

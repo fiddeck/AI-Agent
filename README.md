@@ -31,7 +31,7 @@
 
 | 依赖 | 说明 |
 |---|---|
-| Python 3.13+ | 建议用 [uv](https://github.com/astral-sh/uv) 管理虚拟环境 |
+| Python 3.13+ | 建议用 [uv](https://github.com/astral-sh/uv) 管理虚拟环境；`自动部署环境.bat` 可代装 Python 3.13 |
 | API Key | DeepSeek 平台申请：https://platform.deepseek.com |
 | Windows 10/11 | 工具集与界面均面向 Windows |
 | (可选) VS 2022/2026 | 仅构建桌面版需要，见下文 |
@@ -51,6 +51,12 @@ setx OPENAI_API_KEY "sk-你的密钥"
 #    方式B: 首次打开界面时在 ⚙ 设置里填写（保存到 settings.json）
 #    方式C: 复制 settings.json 模板并填 apiKey 字段（键名兼容 camelCase/PascalCase/snake_case）
 ```
+
+> 不想手敲命令：双击根目录的 **`自动部署环境.bat`**。它会自动完成：
+> 检查/安装 Python 3.13（64 位，按当前用户静默安装）→ 检测并重建损坏的 `.venv`
+> → 优先 `uv sync`、没有 uv 时回退 `.venv + pip install -e .` → 验证关键依赖
+> → （若存在 `dist\AI-Agent-GUI`）更新桌面快捷方式。
+> 部署过程不会写入 API Key；首次使用仍需按上面的方式 A/B 配置。
 
 ## 使用方式（三选一）
 
@@ -185,8 +191,9 @@ start.bat    # 等价于 .venv\Scripts\python chat.py
 ## 迁移到其他电脑
 
 1. **打包时不要包含 `.venv` 目录**——虚拟环境在 `pyvenv.cfg` 里写死了创建它的那台电脑的 Python 路径；
-2. 拷贝项目到新电脑后，先双击 **`修复环境.bat`**（自动删除旧 `.venv` 并用本机 Python 重建，
-   优先 `uv sync`，无 uv 时回退 `python -m venv` + `pip install -e .`）；
+2. 拷贝项目到新电脑后，双击 **`自动部署环境.bat`**（推荐：自动检查/安装 Python 3.13、
+   重建损坏的 `.venv`、优先 `uv sync`、无 uv 时回退 `pip install -e .`，并验证依赖）；
+   若只想重建已有虚拟环境，也可用 **`修复环境.bat`**；
 3. 设置 API Key：`setx OPENAI_API_KEY "sk-你的密钥"`（或打开界面后在 ⚙ 里填写）；
 4. 然后双击 `AI-Agent 桌面版.lnk` 或运行 `webui.bat`。
 
@@ -214,10 +221,12 @@ AI-Agent/
 ├── chat.py            # 命令行聊天 (调试用)
 ├── command.py         # start.bat 入口
 ├── webui.bat          # 网页版启动器 (纯 ASCII, 勿加中文)
+├── 修复环境.bat        # 重建损坏的 .venv (优先 uv sync)
+├── 自动部署环境.bat    # 新机器一键部署: Python/venv/依赖/快捷方式
 ├── settings.json      # 共享设置 (首次配置后生成)
 ├── data/sessions/     # 会话持久化 (运行时生成, 已加入 .gitignore)
 ├── tests/             # pytest 单元 + 端到端测试
 ├── AI-Agent-GUI/      # WinUI 3 桌面版源码
 ├── docs/IMPROVEMENTS.md  # 本轮重构/审计说明
-└── requirements.txt   # 依赖清单 (uv sync 使用 pyproject.toml)
+└── requirements.txt   # legacy 平铺依赖清单 (以 pyproject.toml + uv.lock 为准)
 ```

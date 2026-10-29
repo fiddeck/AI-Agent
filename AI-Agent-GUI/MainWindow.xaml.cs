@@ -56,10 +56,13 @@ public sealed partial class MainWindow : Window
         // 按 WinUI 3 规范自定义标题栏:
         // 内容延伸到标题栏后, 用 SetTitleBar(UIElement) 指定拖拽区 —— 拖拽、双击最大化、
         // 系统菜单、贴边布局、DPI 换算全部由系统处理。
+        // 关键: 拖拽区必须是"不包含交互控件"的独立元素。若把包含设置按钮的整条标题栏
+        // 交给 SetTitleBar，按钮点击会被系统当成拖拽窗口(WindowsAppSDK #2574)，表现为
+        // "设置按钮点了没反应"。
         // 不要用 AppWindow.TitleBar.SetDragRectangles 手动计算拖拽矩形: 该 API 以物理像素
         // 工作而 XAML 尺寸是 DIP, 在不同缩放比例的机器上会错位 (表现为窗口拖不动)。
         ExtendsContentIntoTitleBar = true;
-        SetTitleBar(AppTitleBar);
+        SetTitleBar(TitleBarDragArea);
         ApplyTitleBarColors();
 
         // 初始尺寸放到 Loaded 里做, 以便拿到 RasterizationScale 做 DPI 换算
@@ -198,7 +201,7 @@ public sealed partial class MainWindow : Window
             string.IsNullOrEmpty(Environment.GetEnvironmentVariable("OPENAI_API_KEY")))
         {
             await Task.Delay(800);   // 等窗口完成激活
-            Dispatch(() => OpenSettingsDialog(true));
+            Dispatch(() => _ = OpenSettingsDialogAsync(true));
         }
     }
 
@@ -368,6 +371,23 @@ public sealed partial class MainWindow : Window
         try { action(); }
         catch (Exception ex) { ShowInlineError("界面异常: " + ex.Message); }
     });
+
+    /// <summary>轻量诊断日志(gui.log)，用于定位"点了没反应"这类只有运行时才暴露的问题。</summary>
+    private void Log(string message)
+    {
+        try
+        {
+            var dir = _projectRoot ?? AppContext.BaseDirectory;
+            var path = Path.Combine(dir, "gui.log");
+            var encoding = new System.Text.UTF8Encoding(true);   // 带 BOM，记事本/PowerShell 都不会乱码
+            if (!File.Exists(path)) File.WriteAllText(path, string.Empty, encoding);
+            File.AppendAllText(
+                path,
+                $"[{DateTime.Now:yyyy-MM-dd HH:mm:ss}] {message}{Environment.NewLine}",
+                encoding);
+        }
+        catch { /* 日志失败不影响功能 */ }
+    }
 
     private void ShowInlineError(string message)
     {
@@ -829,23 +849,49 @@ public sealed partial class MainWindow : Window
         }
     }
 
-    private async void Settings_Click(object sender, RoutedEventArgs e) => OpenSettingsDialog(false);
-
-    private async void OpenSettingsDialog(bool firstRun)
+    private async void Settings_Click(object sender, RoutedEventArgs e)
     {
-        if (_projectRoot == null)
+        Log("设置按钮被点击");
+        await OpenSettingsDialogAsync(false);
+    }
+
+    /// <summary>
+    /// 打开设置对话框。所有异常都在这里兜底: ContentDialog.ShowAsync 在窗口未激活/
+    /// XamlRoot 尚未就绪/已有对话框打开时会抛异常，async void 里抛出去会静默失败，
+    /// 表现就是"点设置没反应"。这里记录 gui.log 并给出可见提示。
+    /// </summary>
+    private async Task OpenSettingsDialogAsync(bool firstRun)
+    {
+        try
         {
-            ShowInlineError("未找到项目根目录, 无法保存设置。");
-            return;
+            if (_projectRoot == null)
+            {
+                ShowInlineError("未找到项目根目录, 无法保存设置。");
+                return;
+            }
+            var xamlRoot = RootGrid.XamlRoot ?? Content?.XamlRoot;
+            if (xamlRoot == null)
+            {
+                Log("打开设置失败: XamlRoot 尚未就绪");
+                ShowInlineError("窗口尚未加载完成，请稍后再点设置。");
+                return;
+            }
+
+            var dialog = new SettingsDialog(_settings, firstRun)
+            {
+                XamlRoot = xamlRoot,
+                RequestedTheme = UiColors.IsDarkTheme ? ElementTheme.Dark : ElementTheme.Light,
+            };
+            var result = await dialog.ShowAsync();
+            Log($"设置对话框已关闭: {result}");
+            if (result != ContentDialogResult.Primary || dialog.Result == null) return;
+            await ApplySettingsAsync(dialog.Result);
         }
-        var dialog = new SettingsDialog(_settings, firstRun)
+        catch (Exception ex)
         {
-            XamlRoot = Content.XamlRoot,
-            RequestedTheme = UiColors.IsDarkTheme ? ElementTheme.Dark : ElementTheme.Light,
-        };
-        var result = await dialog.ShowAsync();
-        if (result != ContentDialogResult.Primary || dialog.Result == null) return;
-        await ApplySettingsAsync(dialog.Result);
+            Log("打开设置失败: " + ex);
+            ShowInlineError("打开设置失败: " + ex.Message);
+        }
     }
 
     private async Task ApplySettingsAsync(GuiSettings next)
